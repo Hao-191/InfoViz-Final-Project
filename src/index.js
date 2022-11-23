@@ -4,25 +4,11 @@ import { Cell } from "./cell";
 import { csv, min, max, median, interpolateGnBu, interpolateRdBu, mean } from "d3";
 import { Scales } from "./scale";
 import { Legend } from "./legend";
-import Papa from 'papaparse'
+import GetData from "./getData";
 
 const csvUrl = 'https://gist.githubusercontent.com/hogwild/3b9aa737bde61dcb4dfa60cde8046e04/raw/citibike2020.csv'
-
-const GDPUrl =  '../src/GDPbyProvince.csv'
-const GarbageUrl =  '../src/VolumeofGarbagebyProvince.csv'
-
-function ReadCSV(url){
-    const [data, setData] = React.useState();
-    React.useEffect(()=>{
-        Papa.parse(url, {
-            download: true,
-            complete:function(data){
-                console.log(data.data)
-                setData(data.data)
-            }
-        })
-    }, [])
-}
+const GDPUrl =  'https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/GDPbyProvince.csv'
+const GarbageUrl =  'https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/VolumeofGarbagebyProvince.csv'
 
 function useData(csvPath){
     const [dataAll, setData] = React.useState(null);
@@ -40,7 +26,6 @@ function useData(csvPath){
     return dataAll;
 }
 
-
 function removeDuplicateStation(data){
     const temp = data.map(d => d.station);
     return temp.filter( (d, idx) =>  temp.indexOf(d) === idx);
@@ -48,8 +33,10 @@ function removeDuplicateStation(data){
 
 function HeatMap(){
     //test read files
-    ReadCSV(GDPUrl)
-    ReadCSV(GarbageUrl)
+    const GDP = GetData.GetGDP(GDPUrl)
+    const garbage = GetData.GETGarbage(GarbageUrl)
+    console.log("GDP data:", GDP)
+    console.log("Garbage data:", garbage)
 
 
     const WIDTH = 900;
@@ -58,6 +45,7 @@ function HeatMap(){
     const height = HEIGHT - margin.top - margin.bottom;
     const width = WIDTH - margin.left - margin.right;
     const data = useData(csvUrl);
+    console.log("data", data)
     if(!data){
         return <pre>Loading...</pre>
     }
