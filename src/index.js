@@ -18,6 +18,7 @@ function HeatMap() {
   const [startYear, setStartYear] = React.useState("2011");
   const [endYear, setEndYear] = React.useState("2020");
 
+  // Load dataset
   if (garbage === null || saturationRange === []) {
     return <pre>Loading...</pre>;
   }
