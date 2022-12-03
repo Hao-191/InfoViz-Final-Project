@@ -8,7 +8,6 @@ export const Scales = {
             .nice();
         },
     band: (discreteValue, start_pos, end_pos) => {
-        // console.log(stations);
         return scaleBand()
         .range([start_pos, end_pos])
         .domain(discreteValue);
