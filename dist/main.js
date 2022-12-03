@@ -23,6 +23,7 @@ function Cell(props) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(xScale(dYear), ", ").concat(yScale(dRegion), ")")
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
+    rx: 15,
     width: xScale.bandwidth(),
     height: yScale.bandwidth(),
     fill: color,
@@ -125,7 +126,6 @@ function Legend(props) {
     numberOfTicks = props.numberOfTicks,
     rangeOfValues = props.rangeOfValues,
     colormap = props.colormap;
-  console.log(rangeOfValues);
   var _rangeOfValues = _slicedToArray(rangeOfValues, 2),
     start = _rangeOfValues[0],
     end = _rangeOfValues[1];
@@ -63783,6 +63783,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scale__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scale */ "./src/scale.js");
 /* harmony import */ var _legend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./legend */ "./src/legend.js");
 /* harmony import */ var _getData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./getData */ "./src/getData.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -63794,9 +63800,24 @@ var GDPUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be5
 var GarbageUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/VolumeofGarbagebyProvince.csv";
 function HeatMap() {
   var garbage = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GETGarbage(GarbageUrl);
-  if (!garbage) {
+
+  // Control Year Status
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState("2011"),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    startYear = _React$useState2[0],
+    setStartYear = _React$useState2[1];
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState("2020"),
+    _React$useState4 = _slicedToArray(_React$useState3, 2),
+    endYear = _React$useState4[0],
+    setEndYear = _React$useState4[1];
+
+  // Load dataset
+  if (garbage === null || saturationRange === []) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("pre", null, "Loading...");
   }
+
+  // Control range for each rows
+  var saturationRange = [];
   var WIDTH = 500;
   var HEIGHT = 900;
   var margin = {
@@ -63807,23 +63828,43 @@ function HeatMap() {
   };
   var height = HEIGHT - margin.top - margin.bottom;
   var width = WIDTH - margin.left - margin.right;
-  var YEAR = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"];
+
+  // Get year range
+  var YEARS = ["2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"];
+  var YEAR = YEARS.map(function (x) {
+    return Number(x) >= startYear && Number(x) <= endYear ? x : null;
+  }).filter(function (element) {
+    return element !== null;
+  });
   var PROVINCE = garbage.map(function (d) {
     return d.Region;
   });
   var xScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.band(YEAR, 0, width);
   var yScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.band(PROVINCE, 0, height);
-  var values = [];
+
+  //const garbageValues = [];
+
+  // Get the saturation of each province
   garbage.map(function (d) {
-    return Object.keys(d).map(function (element) {
+    var max_value = 0;
+    var min_value = 10000;
+    Object.keys(d).map(function (element) {
       if (YEAR.includes(element)) {
-        values.push(d[element]);
+        var scaled_value = d[element];
+        // get saturation range for each row
+        if (scaled_value >= max_value) {
+          max_value = scaled_value;
+        }
+        if (scaled_value <= min_value) {
+          min_value = scaled_value;
+        }
+        //garbageValues.push(scaled_value); // scale the garbageValues
       }
     });
+
+    saturationRange.push([min_value, max_value]);
   });
-  var startRange = [(0,d3__WEBPACK_IMPORTED_MODULE_3__.min)(values), (0,d3__WEBPACK_IMPORTED_MODULE_3__.max)(values)];
   var colorRange = [(0,d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr)(0), (0,d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr)(1)];
-  var colormap = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.colorSequential(startRange, d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr);
 
   // const colormap = Scales.colormapLiner(startRange, colorRange);
   // const colormap = Scales.colorDiverging(startRange, interpolateCividis);
@@ -63833,9 +63874,10 @@ function HeatMap() {
     height: HEIGHT
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(margin.left, ", ").concat(margin.top, ")")
-  }, garbage.map(function (d) {
+  }, garbage.map(function (d, index) {
     return Object.keys(d).map(function (element) {
       if (YEAR.includes(element)) {
+        var colormap = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.colorSequential(saturationRange[index], d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr);
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_cell__WEBPACK_IMPORTED_MODULE_2__.Cell, {
           key: element + d.Region,
           dYear: element,
@@ -63852,14 +63894,14 @@ function HeatMap() {
       transform: "translate(".concat(xScale(s) + 15, ",-8)rotate(60)")
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
       style: {
-        textAnchor: 'end'
+        textAnchor: "end"
       }
     }, s));
   }), PROVINCE.map(function (m) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
       key: m,
       style: {
-        textAnchor: 'end'
+        textAnchor: "end"
       },
       x: -10,
       y: yScale(m) + 15

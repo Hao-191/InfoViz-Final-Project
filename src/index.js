@@ -26,7 +26,7 @@ function HeatMap() {
   // Control range for each rows
   const saturationRange = [];
 
-  const WIDTH = 500;
+  const WIDTH = 700;
   const HEIGHT = 900;
   const margin = { top: 200, right: 40, bottom: 50, left: 110 };
   const height = HEIGHT - margin.top - margin.bottom;
