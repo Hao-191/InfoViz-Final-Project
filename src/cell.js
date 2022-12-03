@@ -1,8 +1,10 @@
 import React from "react";
 
 export function Cell(props){
-    const { d, xScale, yScale, color} = props;
-    return <g transform={`translate(${xScale(d.station)}, ${yScale(d.month)})`}>
+    console.log("test")
+    const {dYear, dRegion, xScale, yScale, color} = props;
+    console.log(dYear, dRegion)
+    return <g transform={`translate(${xScale(dYear)}, ${yScale(dRegion)})`}>
         <rect width={xScale.bandwidth()} height={yScale.bandwidth()} fill={color} stroke={"black"} />
     </g>
 }

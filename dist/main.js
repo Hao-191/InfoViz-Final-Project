@@ -15,12 +15,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 function Cell(props) {
-  var d = props.d,
+  var dYear = props.dYear,
+    dRegion = props.dRegion,
     xScale = props.xScale,
     yScale = props.yScale,
     color = props.color;
+  console.log(dYear, dRegion);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
-    transform: "translate(".concat(xScale(d.station), ", ").concat(yScale(d.month), ")")
+    transform: "translate(".concat(xScale(dYear), ", ").concat(yScale(dRegion), ")")
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
     width: xScale.bandwidth(),
     height: yScale.bandwidth(),
@@ -28,6 +30,71 @@ function Cell(props) {
     stroke: "black"
   }));
 }
+
+/***/ }),
+
+/***/ "./src/getData.js":
+/*!************************!*\
+  !*** ./src/getData.js ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var GetGDP = function GetGDP(url) {
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    dataAll = _React$useState2[0],
+    setData = _React$useState2[1];
+  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
+    (0,d3__WEBPACK_IMPORTED_MODULE_1__.csv)(url).then(function (data) {
+      console.log("GDP:", data);
+      setData(data);
+    });
+  }, []);
+  return dataAll;
+};
+var GETGarbage = function GETGarbage(url) {
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
+    _React$useState4 = _slicedToArray(_React$useState3, 2),
+    dataAll = _React$useState4[0],
+    setData = _React$useState4[1];
+  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
+    (0,d3__WEBPACK_IMPORTED_MODULE_1__.csv)(url).then(function (data) {
+      data.forEach(function (d) {
+        d["2011"] = +d["2011"];
+        d["2012"] = +d["2012"];
+        d["2013"] = +d["2013"];
+        d["2014"] = +d["2014"];
+        d["2015"] = +d["2015"];
+        d["2016"] = +d["2016"];
+        d["2017"] = +d["2017"];
+        d["2018"] = +d["2018"];
+        d["2019"] = +d["2019"];
+        d["2020"] = +d["2020"];
+      });
+      setData(data);
+    });
+  }, []);
+  return dataAll;
+};
+var GetData = {
+  GetGDP: GetGDP,
+  GETGarbage: GETGarbage
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GetData);
 
 /***/ }),
 
@@ -117,11 +184,9 @@ __webpack_require__.r(__webpack_exports__);
 
 var Scales = {
   linear: function linear(min_value, max_value, start_pos, end_pos) {
-    console.log('the linear scale for scatter plot/bar chart');
     return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleLinear)().range([start_pos, end_pos]).domain([min_value, max_value]).nice();
   },
   band: function band(discreteValue, start_pos, end_pos) {
-    console.log('the x scale for the bar chart');
     // console.log(stations);
     return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleBand)().range([start_pos, end_pos]).domain(discreteValue);
   },
@@ -63719,47 +63784,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
 /* harmony import */ var _scale__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scale */ "./src/scale.js");
 /* harmony import */ var _legend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./legend */ "./src/legend.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+/* harmony import */ var _getData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./getData */ "./src/getData.js");
 
 
 
 
 
 
-var csvUrl = 'https://gist.githubusercontent.com/hogwild/3b9aa737bde61dcb4dfa60cde8046e04/raw/citibike2020.csv';
-function useData(csvPath) {
-  var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
-    _React$useState2 = _slicedToArray(_React$useState, 2),
-    dataAll = _React$useState2[0],
-    setData = _React$useState2[1];
-  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
-    (0,d3__WEBPACK_IMPORTED_MODULE_3__.csv)(csvPath).then(function (data) {
-      data.forEach(function (d) {
-        d.start = +d.start;
-        d.tripdurationS = +d.tripdurationS;
-        d.end = +d.end;
-        d.tripdurationE = +d.tripdurationE;
-      });
-      setData(data);
-    });
-  }, []);
-  return dataAll;
-}
-function removeDuplicateStation(data) {
-  var temp = data.map(function (d) {
-    return d.station;
-  });
-  return temp.filter(function (d, idx) {
-    return temp.indexOf(d) === idx;
-  });
-}
-;
+
+var GDPUrl = 'https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/GDPbyProvince.csv';
+var GarbageUrl = 'https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/VolumeofGarbagebyProvince.csv';
 function HeatMap() {
+  var garbage = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GETGarbage(GarbageUrl);
+  if (!garbage) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("pre", null, "Loading...");
+  }
   var WIDTH = 900;
   var HEIGHT = 400;
   var margin = {
@@ -63770,71 +63809,30 @@ function HeatMap() {
   };
   var height = HEIGHT - margin.top - margin.bottom;
   var width = WIDTH - margin.left - margin.right;
-  var data = useData(csvUrl);
-  if (!data) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("pre", null, "Loading...");
-  }
-  // console.log(data);
-
-  var MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  var STATION = removeDuplicateStation(data);
-  // console.log(STATION);
-  var xScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.band(STATION, 0, width);
-  var yScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.band(MONTH, 0, height);
-  var startRange = [(0,d3__WEBPACK_IMPORTED_MODULE_3__.min)(data, function (d) {
-    return d.start;
-  }), (0,d3__WEBPACK_IMPORTED_MODULE_3__.median)(data, function (d) {
-    return d.start;
-  }), (0,d3__WEBPACK_IMPORTED_MODULE_3__.max)(data, function (d) {
-    return d.start;
-  })];
-  var colorRange = [(0,d3__WEBPACK_IMPORTED_MODULE_3__.interpolateGnBu)(0), (0,d3__WEBPACK_IMPORTED_MODULE_3__.interpolateGnBu)(0.5), (0,d3__WEBPACK_IMPORTED_MODULE_3__.interpolateGnBu)(0.8)];
-  // const colormap = Scales.colormapLiner(startRange, colorRange);
-  // const colormap = Scales.colorSequential(startRange, interpolateGnBu);
-  var colormap = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.colorDiverging(startRange, d3__WEBPACK_IMPORTED_MODULE_3__.interpolateRdBu);
+  var YEAR = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"];
+  var PROVINCE = garbage.map(function (d) {
+    return d.Region;
+  });
+  var xScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.band(YEAR, 0, width);
+  var yScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.band(PROVINCE, 0, height);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
     width: WIDTH,
     height: HEIGHT
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(margin.left, ", ").concat(margin.top, ")")
-  }, data.map(function (d) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_cell__WEBPACK_IMPORTED_MODULE_2__.Cell, {
-      key: d.station + d.month,
-      d: d,
-      xScale: xScale,
-      yScale: yScale,
-      color: colormap(d.start)
-    });
-  }), STATION.map(function (s) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
-      key: s,
-      transform: "translate(".concat(xScale(s) + 5, ",-8)rotate(60)")
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
-      style: {
-        textAnchor: 'end'
+  }, garbage.map(function (d) {
+    Object.keys(d).map(function (element) {
+      if (YEAR.includes(element)) {
+        console.log(element, d.Region);
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_cell__WEBPACK_IMPORTED_MODULE_2__.Cell, {
+          dYear: element,
+          dRegion: d.Region,
+          xScale: xScale,
+          yScale: yScale,
+          color: "green"
+        });
       }
-    }, s));
-  }), MONTH.map(function (m) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
-      key: m,
-      style: {
-        textAnchor: 'middle'
-      },
-      x: -30,
-      y: yScale(m) + 10
-    }, m);
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_legend__WEBPACK_IMPORTED_MODULE_5__.Legend, {
-    x: 0,
-    y: height + 10,
-    width: width / 2,
-    height: 20,
-    numberOfTicks: 5,
-    rangeOfValues: [(0,d3__WEBPACK_IMPORTED_MODULE_3__.min)(data, function (d) {
-      return d.start;
-    }), (0,d3__WEBPACK_IMPORTED_MODULE_3__.max)(data, function (d) {
-      return d.start;
-    })],
-    colormap: colormap
+    });
   })));
 }
 ;
