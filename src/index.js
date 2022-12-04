@@ -13,7 +13,8 @@ const GarbageUrl =
 
 function HeatMap() {
   const garbage = GetData.GETGarbage(GarbageUrl);
-
+  const GDP = GetData.GetGDP(GDPUrl);
+  console.log(GDP)
   // Control Year Status
   const [startYear, setStartYear] = React.useState("2011");
   const [endYear, setEndYear] = React.useState("2020");
@@ -97,8 +98,9 @@ function HeatMap() {
     <svg width={WIDTH} height={HEIGHT}>
       <g transform={`translate(${margin.left}, ${margin.top})`}>
         {garbage.map((d, index) => {
-          return Object.keys(d).map((element) => {
+          return Object.keys(d).map((element, idx) => {
             if (YEAR.includes(element)) {
+              console.log(index*10+idx)
               const colormap = Scales.colorSequential(
                 saturationRange[index],
                 interpolateYlOrBr

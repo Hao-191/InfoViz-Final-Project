@@ -23,7 +23,6 @@ function Cell(props) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(xScale(dYear), ", ").concat(yScale(dRegion), ")")
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
-    rx: 15,
     width: xScale.bandwidth(),
     height: yScale.bandwidth(),
     fill: color,
@@ -63800,6 +63799,8 @@ var GDPUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be5
 var GarbageUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/VolumeofGarbagebyProvince.csv";
 function HeatMap() {
   var garbage = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GETGarbage(GarbageUrl);
+  var GDP = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetGDP(GDPUrl);
+  console.log(GDP);
 
   // Control Year Status
   var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState("2011"),
@@ -63818,7 +63819,7 @@ function HeatMap() {
 
   // Control range for each rows
   var saturationRange = [];
-  var WIDTH = 500;
+  var WIDTH = 700;
   var HEIGHT = 900;
   var margin = {
     top: 200,
