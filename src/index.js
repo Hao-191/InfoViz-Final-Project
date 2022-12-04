@@ -14,7 +14,7 @@ const GarbageUrl =
 function HeatMap() {
   const garbage = GetData.GETGarbage(GarbageUrl);
   const GDP = GetData.GetGDP(GDPUrl);
-  console.log(GDP)
+
   // Control Year Status
   const [startYear, setStartYear] = React.useState("2011");
   const [endYear, setEndYear] = React.useState("2020");
@@ -24,12 +24,15 @@ function HeatMap() {
     return <pre>Loading...</pre>;
   }
 
-  // Control range for each rows
-  const saturationRange = [];
+  // Load dataset
+  if (GDP === null) {
+    return <pre>Loading...</pre>;
+  }
 
-  const WIDTH = 700;
-  const HEIGHT = 900;
-  const margin = { top: 200, right: 40, bottom: 50, left: 110 };
+  //TODO change 11 and 31 into variables
+  const WIDTH = 11 * 50;
+  const HEIGHT = 31 * 50;
+  const margin = { top: 200, right: 40, bottom: 110, left: 110 };
   const height = HEIGHT - margin.top - margin.bottom;
   const width = WIDTH - margin.left - margin.right;
 
@@ -67,7 +70,9 @@ function HeatMap() {
   const xScale = Scales.band(YEAR, 0, width);
   const yScale = Scales.band(PROVINCE, 0, height);
 
-  //const garbageValues = [];
+
+  // Control range for each rows
+  const saturationRange = [];
 
   // Get the saturation of each province
   garbage.map((d) => {
@@ -89,18 +94,36 @@ function HeatMap() {
     saturationRange.push([min_value, max_value]);
   });
 
-  const colorRange = [interpolateYlOrBr(0), interpolateYlOrBr(1)];
+  //Assign a scale for each Provience
+  const ProvScales = []
+  GDP.map((d) => {
+    const temp = []
+    Object.keys(d).map((element) => {
+      if (YEAR.includes(element)) {
+        temp.push(d[element])
+      }
+    })
+    const sizeScale = Scales.linear(min(temp), max(temp), 0, width/(YEAR.length))
+    ProvScales.push(sizeScale)
+  })
 
-  // const colormap = Scales.colormapLiner(startRange, colorRange);
-  // const colormap = Scales.colorDiverging(startRange, interpolateCividis);
+  //Give a size to each cell
+  const cellSize = []
+  GDP.map((d, index) => {
+    Object.keys(d).map((element) => {
+      if (YEAR.includes(element)) {
+        cellSize.push(ProvScales[index](d[element]))
+      }
+    })
+  })
 
   return (
     <svg width={WIDTH} height={HEIGHT}>
       <g transform={`translate(${margin.left}, ${margin.top})`}>
+
         {garbage.map((d, index) => {
           return Object.keys(d).map((element, idx) => {
             if (YEAR.includes(element)) {
-              console.log(index*10+idx)
               const colormap = Scales.colorSequential(
                 saturationRange[index],
                 interpolateYlOrBr
@@ -112,12 +135,15 @@ function HeatMap() {
                   dRegion={d.Region}
                   xScale={xScale}
                   yScale={yScale}
+                  //TODO do somethign about the -9
+                  size = {cellSize[idx-9]}
                   color={colormap(d[element])}
                 />
               );
             }
-          });
+          })
         })}
+
         {YEAR.map((s) => {
           return (
             <g key={s} transform={`translate(${xScale(s) + 15},-8)rotate(60)`}>
@@ -125,6 +151,7 @@ function HeatMap() {
             </g>
           );
         })}
+
         {PROVINCE.map((m) => {
           return (
             <text
