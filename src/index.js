@@ -1,10 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Cell } from "./cell";
-import { csv, min, max, median, interpolateYlOrBr, mean } from "d3";
+import { min, max, interpolateYlOrBr } from "d3";
 import { Scales } from "./scale";
-import { Legend } from "./legend";
+import { Tooltip } from "./tooltip";
 import GetData from "./getData";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const GDPUrl =
   "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/GDPbyProvince.csv";
@@ -12,12 +17,18 @@ const GarbageUrl =
   "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/VolumeofGarbagebyProvince.csv";
 
 function HeatMap() {
-  const garbage = GetData.GETGarbage(GarbageUrl);
-  const GDP = GetData.GetGDP(GDPUrl);
-
   // Control Year Status
-  const [startYear, setStartYear] = React.useState("2011");
-  const [endYear, setEndYear] = React.useState("2020");
+  const [startYear, setStartYear] = React.useState(2011);
+  const [endYear, setEndYear] = React.useState(2020);
+
+  // tooltip
+  const [selectedRegion, setSelectedRegion] = React.useState(null);
+  const [selectedYear, setSelectedYear] = React.useState(null);
+  const [tooltipLeft, setTooltipLeft] = React.useState(null);
+  const [tooltipTop, setTooltipTop] = React.useState(null);
+
+  const garbage = GetData.GETGarbage(GarbageUrl, startYear, endYear);
+  const GDP = GetData.GetGDP(GDPUrl, startYear, endYear);
 
   // Load dataset
   if (garbage === null || saturationRange === []) {
@@ -28,6 +39,10 @@ function HeatMap() {
   if (GDP === null) {
     return <pre>Loading...</pre>;
   }
+
+  //tooltip point filter
+  const dTooltipGarbage = garbage.filter((d) => d.Region === selectedRegion)[0];
+  const dTooltipGDP = GDP.filter((d) => d.Region === selectedRegion)[0];
 
   //TODO change 11 and 31 into variables
   const WIDTH = 11 * 50;
@@ -70,7 +85,6 @@ function HeatMap() {
   const xScale = Scales.band(YEAR, 0, width);
   const yScale = Scales.band(PROVINCE, 0, height);
 
-
   // Control range for each rows
   const saturationRange = [];
 
@@ -94,78 +108,124 @@ function HeatMap() {
     saturationRange.push([min_value, max_value]);
   });
 
+  //console.log(saturationRange)
   //Assign a scale for each Provience
-  const ProvScales = []
+  const ProvScales = [];
   GDP.map((d) => {
-    const temp = []
+    const temp = [];
     Object.keys(d).map((element) => {
       if (YEAR.includes(element)) {
-        temp.push(d[element])
+        temp.push(d[element]);
       }
-    })
-    const sizeScale = Scales.linear(min(temp), max(temp), 0, width/(YEAR.length))
-    ProvScales.push(sizeScale)
-  })
+    });
+    const sizeScale = Scales.linear(
+      min(temp),
+      max(temp),
+      0,
+      width / YEAR.length
+    );
+    ProvScales.push(sizeScale);
+  });
 
   //Give a size to each cell
-  const cellSize = []
+  const cellSize = [];
   GDP.map((d, index) => {
     Object.keys(d).map((element) => {
       if (YEAR.includes(element)) {
-        cellSize.push(ProvScales[index](d[element]))
+        cellSize.push(ProvScales[index](d[element]));
       }
-    })
-  })
+    });
+  });
+
+  const handleSelect = (e) => {
+    e.preventDefault();
+    let newStartYear = e.target.value;
+    setStartYear(newStartYear);
+  };
 
   return (
-    <svg width={WIDTH} height={HEIGHT}>
-      <g transform={`translate(${margin.left}, ${margin.top})`}>
+    <React.Fragment>
+      {/* Past years selector */}
+      <Box sx={{ maxWidth: 150 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Past Years</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={startYear}
+            label="Year Range"
+            onChange={handleSelect}
+          >
+            <MenuItem value={2017}>Past 5 Years</MenuItem>
+            <MenuItem value={2011}>Past 10 Years</MenuItem>
+            <MenuItem value={2007}>Past 15 Years</MenuItem>
+            <MenuItem value={2002}>Past 19 Years</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
 
-        {garbage.map((d, index) => {
-          return Object.keys(d).map((element, idx) => {
-            if (YEAR.includes(element)) {
-              const colormap = Scales.colorSequential(
-                saturationRange[index],
-                interpolateYlOrBr
-              );
-              return (
-                <Cell
-                  key={element + d.Region}
-                  dYear={element}
-                  dRegion={d.Region}
-                  xScale={xScale}
-                  yScale={yScale}
-                  //TODO do somethign about the -9
-                  size = {cellSize[idx-9]}
-                  color={colormap(d[element])}
-                />
-              );
-            }
-          })
-        })}
+      <svg width={WIDTH} height={HEIGHT}>
+        <g transform={`translate(${margin.left}, ${margin.top - 100})`}>
+          {garbage.map((d, index) => {
+            return Object.keys(d).map((element, idx) => {
+              if (YEAR.includes(element)) {
+                const colormap = Scales.colorSequential(
+                  saturationRange[index],
+                  interpolateYlOrBr
+                );
+                return (
+                  <Cell
+                    key={element + d.Region}
+                    dYear={element}
+                    dRegion={d.Region}
+                    xScale={xScale}
+                    yScale={yScale}
+                    //TODO do somethign about the -9
+                    size={cellSize[idx - 9]}
+                    color={colormap(d[element])}
+                    setSelectedRegion={setSelectedRegion}
+                    setSelectedYear={setSelectedYear}
+                    setTooltipLeft={setTooltipLeft}
+                    setTooltipTop={setTooltipTop}
+                  />
+                );
+              }
+            });
+          })}
 
-        {YEAR.map((s) => {
-          return (
-            <g key={s} transform={`translate(${xScale(s) + 15},-8)rotate(60)`}>
-              <text style={{ textAnchor: "end" }}>{s}</text>
-            </g>
-          );
-        })}
+          {YEAR.map((s) => {
+            return (
+              <g
+                key={s}
+                transform={`translate(${xScale(s) + 15},-8)rotate(60)`}
+              >
+                <text style={{ textAnchor: "end" }}>{s}</text>
+              </g>
+            );
+          })}
 
-        {PROVINCE.map((m) => {
-          return (
-            <text
-              key={m}
-              style={{ textAnchor: "end" }}
-              x={-10}
-              y={yScale(m) + 15}
-            >
-              {m}
-            </text>
-          );
-        })}
-      </g>
-    </svg>
+          {PROVINCE.map((m) => {
+            return (
+              <text
+                key={m}
+                style={{ textAnchor: "end" }}
+                x={-9}
+                y={yScale(m) + 20}
+              >
+                {m}
+              </text>
+            );
+          })}
+        </g>
+      </svg>
+      <Tooltip
+        garbageData={dTooltipGarbage}
+        gdpData={dTooltipGDP}
+        left={tooltipLeft}
+        top={tooltipTop}
+        year={selectedYear}
+      ></Tooltip>
+    </React.Fragment>
   );
 }
 

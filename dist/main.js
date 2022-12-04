@@ -19,12 +19,13 @@ function Cell(props) {
     dRegion = props.dRegion,
     xScale = props.xScale,
     yScale = props.yScale,
+    size = props.size,
     color = props.color;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(xScale(dYear), ", ").concat(yScale(dRegion), ")")
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
-    width: xScale.bandwidth(),
-    height: yScale.bandwidth(),
+    width: size,
+    height: size,
     fill: color,
     stroke: "black"
   }));
@@ -59,8 +60,31 @@ var GetGDP = function GetGDP(url) {
     setData = _React$useState2[1];
   react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
     (0,d3__WEBPACK_IMPORTED_MODULE_1__.csv)(url).then(function (data) {
-      console.log("GDP:", data);
+      data.forEach(function (d) {
+        d["2011"] = +d["2011"];
+        d["2012"] = +d["2012"];
+        d["2013"] = +d["2013"];
+        d["2014"] = +d["2014"];
+        d["2015"] = +d["2015"];
+        d["2016"] = +d["2016"];
+        d["2017"] = +d["2017"];
+        d["2018"] = +d["2018"];
+        d["2019"] = +d["2019"];
+        d["2020"] = +d["2020"];
+      });
       setData(data);
+      //I didn't need this
+
+      // setData(
+      //   // data.map((e) => ({
+      //   //   ...e,
+      //   //   totalGDP: Object.values(e).reduce(
+      //   //     (acc, cur) =>
+      //   //       isNaN(Number(cur)) === false ? acc + Number(cur) : acc + 0,
+      //   //     0
+      //   //   ),
+      //   // }))
+      // );
     });
   }, []);
   return dataAll;
@@ -63800,7 +63824,6 @@ var GarbageUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d3
 function HeatMap() {
   var garbage = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GETGarbage(GarbageUrl);
   var GDP = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetGDP(GDPUrl);
-  console.log(GDP);
 
   // Control Year Status
   var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState("2011"),
@@ -63817,14 +63840,18 @@ function HeatMap() {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("pre", null, "Loading...");
   }
 
-  // Control range for each rows
-  var saturationRange = [];
-  var WIDTH = 700;
-  var HEIGHT = 900;
+  // Load dataset
+  if (GDP === null) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("pre", null, "Loading...");
+  }
+
+  //TODO change 11 and 31 into variables
+  var WIDTH = 11 * 50;
+  var HEIGHT = 31 * 50;
   var margin = {
     top: 200,
     right: 40,
-    bottom: 50,
+    bottom: 110,
     left: 110
   };
   var height = HEIGHT - margin.top - margin.bottom;
@@ -63843,7 +63870,8 @@ function HeatMap() {
   var xScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.band(YEAR, 0, width);
   var yScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.band(PROVINCE, 0, height);
 
-  //const garbageValues = [];
+  // Control range for each rows
+  var saturationRange = [];
 
   // Get the saturation of each province
   garbage.map(function (d) {
@@ -63865,18 +63893,36 @@ function HeatMap() {
 
     saturationRange.push([min_value, max_value]);
   });
-  var colorRange = [(0,d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr)(0), (0,d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr)(1)];
 
-  // const colormap = Scales.colormapLiner(startRange, colorRange);
-  // const colormap = Scales.colorDiverging(startRange, interpolateCividis);
+  //Assign a scale for each Provience
+  var ProvScales = [];
+  GDP.map(function (d) {
+    var temp = [];
+    Object.keys(d).map(function (element) {
+      if (YEAR.includes(element)) {
+        temp.push(d[element]);
+      }
+    });
+    var sizeScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.linear((0,d3__WEBPACK_IMPORTED_MODULE_3__.min)(temp), (0,d3__WEBPACK_IMPORTED_MODULE_3__.max)(temp), 0, width / YEAR.length);
+    ProvScales.push(sizeScale);
+  });
 
+  //Give a size to each cell
+  var cellSize = [];
+  GDP.map(function (d, index) {
+    Object.keys(d).map(function (element) {
+      if (YEAR.includes(element)) {
+        cellSize.push(ProvScales[index](d[element]));
+      }
+    });
+  });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
     width: WIDTH,
     height: HEIGHT
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(margin.left, ", ").concat(margin.top, ")")
   }, garbage.map(function (d, index) {
-    return Object.keys(d).map(function (element) {
+    return Object.keys(d).map(function (element, idx) {
       if (YEAR.includes(element)) {
         var colormap = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.colorSequential(saturationRange[index], d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr);
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_cell__WEBPACK_IMPORTED_MODULE_2__.Cell, {
@@ -63884,7 +63930,10 @@ function HeatMap() {
           dYear: element,
           dRegion: d.Region,
           xScale: xScale,
-          yScale: yScale,
+          yScale: yScale
+          //TODO do somethign about the -9
+          ,
+          size: cellSize[idx - 9],
           color: colormap(d[element])
         });
       }
