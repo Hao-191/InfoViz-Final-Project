@@ -15,10 +15,14 @@ const GDPUrl =
   "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/GDPbyProvince.csv";
 const GarbageUrl =
   "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/VolumeofGarbagebyProvince.csv";
+const PopulationUrl =
+  "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/089497b1bcb908f28ed57ba839ae7c9cbca9b8b4/PopulationbyProvince.csv";
+
 
 function HeatMap() {
   // Control Year Status
   const [startYear, setStartYear] = React.useState(2011);
+  const [variable, setVariable] = React.useState("GDP");
   const [endYear, setEndYear] = React.useState(2020);
 
   // tooltip
@@ -27,26 +31,23 @@ function HeatMap() {
   const [tooltipLeft, setTooltipLeft] = React.useState(null);
   const [tooltipTop, setTooltipTop] = React.useState(null);
 
-  const garbage = GetData.GETGarbage(GarbageUrl);
-  const GDP = GetData.GetGDP(GDPUrl);
-  console.log(GDP)
+  let garbage = GetData.GetGarbage(GarbageUrl);
+  let GDP = GetData.GetVariable(GDPUrl);
+  let Population = GetData.GetVariable(PopulationUrl)
+  const variables = { "GDP": GDP, "Population": Population };
 
   // Load dataset
-  if (garbage === null || saturationRange === []) {
+  if (garbage === null || GDP === null || saturationRange === []) {
     return <pre>Loading...</pre>;
   }
 
-  // Load dataset
-  if (GDP === null) {
-    return <pre>Loading...</pre>;
-  }
 
   //tooltip point filter
   const dTooltipGarbage = garbage.filter((d) => d.Region === selectedRegion)[0];
-  const dTooltipGDP = GDP.filter((d) => d.Region === selectedRegion)[0];
-  const WIDTH = ((endYear-startYear+1) * 40) + 150;
+  const dTooltipFactor = variables[variable].filter((d) => d.Region === selectedRegion)[0];
+  const WIDTH = (endYear - startYear + 1) * 40 + 150;
   const HEIGHT = 31 * 50;
-  const margin = { top: 200, right: 40, bottom: 110, left: 110};
+  const margin = { top: 200, right: 40, bottom: 110, left: 110 };
   const height = HEIGHT - margin.top - margin.bottom;
   const width = WIDTH - margin.left - margin.right;
 
@@ -107,29 +108,27 @@ function HeatMap() {
     saturationRange.push([min_value, max_value]);
   });
 
-  //console.log(saturationRange)
-
   //Assign a scale for each Provience
   const ProvScales = [];
-  GDP.map((d) => {
+  variables[variable].map((d) => {
     const temp = [];
     Object.keys(d).map((element) => {
       if (YEAR.includes(element)) {
         temp.push(d[element]);
       }
-    })
+    });
     const sizeScale = Scales.linear(
       min(temp),
       max(temp),
       0,
-      (width / YEAR.length) - 3
+      width / YEAR.length - 3
     );
     ProvScales.push(sizeScale);
   });
 
   //Give a size to each cell
   const cellSize = [];
-  GDP.map((d, index) => {
+  variables[variable].map((d, index) => {
     Object.keys(d).map((element) => {
       if (YEAR.includes(element)) {
         cellSize.push(ProvScales[index](d[element]));
@@ -143,11 +142,17 @@ function HeatMap() {
     setStartYear(newStartYear);
   };
 
+  const handleVariable = (e) => {
+    e.preventDefault();
+    let newVarible = e.target.value;
+    setVariable(newVarible);
+  };
+
   return (
     <React.Fragment>
       {/* Past years selector */}
-      <Box sx={{ maxWidth: 150 }}>
-        <FormControl fullWidth>
+      <Box sx={{ maxWidth: 150, margin:"15px" }}>
+        <FormControl>
           <InputLabel id="demo-simple-select-label">Past Years</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -163,8 +168,24 @@ function HeatMap() {
           </Select>
         </FormControl>
       </Box>
+      {/* Past variable selector */}
+      <Box sx={{ maxWidth: 150,  margin:"15px" }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label1">Variable Select</InputLabel>
+          <Select
+            labelId="demo-simple-select-label1"
+            id="demo-simple-select1"
+            value={variable}
+            label="Variable Select"
+            onChange={handleVariable}
+          >
+            <MenuItem value={"GDP"}>GDP</MenuItem>
+            <MenuItem value={"Population"}>Population</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
 
-      <svg width={WIDTH} height={HEIGHT}>
+      <svg width={WIDTH} height={HEIGHT} >
         <g transform={`translate(${margin.left}, ${margin.top - 100})`}>
           {garbage.map((d, index) => {
             return Object.keys(d).map((element) => {
@@ -194,10 +215,7 @@ function HeatMap() {
 
           {YEAR.map((s) => {
             return (
-              <g
-                key={s}
-                transform={`translate(${xScale(s)},-20)rotate(60)`}
-              >
+              <g key={s} transform={`translate(${xScale(s)},-20)rotate(60)`}>
                 <text style={{ textAnchor: "end" }}>{s}</text>
               </g>
             );
@@ -209,7 +227,7 @@ function HeatMap() {
                 key={m}
                 style={{ textAnchor: "end" }}
                 x={-9}
-                y={yScale(m)+3}
+                y={yScale(m) + 3}
               >
                 {m}
               </text>
@@ -219,10 +237,11 @@ function HeatMap() {
       </svg>
       <Tooltip
         garbageData={dTooltipGarbage}
-        gdpData={dTooltipGDP}
+        factorData={dTooltipFactor}
         left={tooltipLeft}
         top={tooltipTop}
         year={selectedYear}
+        variable={variable}
       ></Tooltip>
     </React.Fragment>
   );

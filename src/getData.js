@@ -1,7 +1,7 @@
 import React from "react";
 import { csv } from "d3";
 
-const GetGDP = (url) => {
+const GetVariable = (url) => {
   const [dataAll, setData] = React.useState(null);
   React.useEffect(() => {
     csv(url).then((data) => {
@@ -18,7 +18,7 @@ const GetGDP = (url) => {
   return dataAll;
 };
 
-const GETGarbage = (url) => {
+const GetGarbage = (url) => {
   const [dataAll, setData] = React.useState(null);
   React.useEffect(() => {
     csv(url).then((data) => {
@@ -36,8 +36,8 @@ const GETGarbage = (url) => {
 };
 
 const GetData = {
-  GetGDP,
-  GETGarbage,
+  GetGarbage,
+  GetVariable,
 };
 
 export default GetData;

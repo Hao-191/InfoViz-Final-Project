@@ -1,7 +1,7 @@
 import React from "react";
 
 export function Tooltip(props) {
-  const { garbageData, gdpData, left, top, year } = props;
+  const { garbageData, factorData, left, top, year, variable } = props;
   if (left === null) {
     return <div></div>;
   } else {
@@ -26,7 +26,7 @@ export function Tooltip(props) {
         <p>Year {year}</p>
         <ul>
           <li>Volume of Garbage: {garbageData[`${year}`]}</li>
-          <li>GDP: {gdpData[`${year}`]}</li>
+          <li>{variable}: {factorData[`${year}`]}</li>
         </ul>
       </div>
     );
