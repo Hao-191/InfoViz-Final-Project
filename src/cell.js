@@ -13,9 +13,8 @@ export function Cell(props) {
     setTooltipLeft,
     setTooltipTop,
   } = props;
-
   return (
-    <g transform={`translate(${xScale(dYear)}, ${yScale(dRegion)})`}>
+    <g transform={`translate(${xScale(dYear)-(size/2)}, ${yScale(dRegion)-(size/2)})`}>
       <rect
         width={size}
         height={size}
