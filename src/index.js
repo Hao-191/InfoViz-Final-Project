@@ -43,11 +43,9 @@ function HeatMap() {
   //tooltip point filter
   const dTooltipGarbage = garbage.filter((d) => d.Region === selectedRegion)[0];
   const dTooltipGDP = GDP.filter((d) => d.Region === selectedRegion)[0];
-
-  //TODO change 11 and 31 into variables
-  const WIDTH = 11 * 50;
+  const WIDTH = ((endYear-startYear+1) * 40) + 150;
   const HEIGHT = 31 * 50;
-  const margin = { top: 200, right: 40, bottom: 110, left: 110 };
+  const margin = { top: 200, right: 40, bottom: 110, left: 110};
   const height = HEIGHT - margin.top - margin.bottom;
   const width = WIDTH - margin.left - margin.right;
 
@@ -109,6 +107,7 @@ function HeatMap() {
   });
 
   //console.log(saturationRange)
+
   //Assign a scale for each Provience
   const ProvScales = [];
   GDP.map((d) => {
@@ -117,12 +116,12 @@ function HeatMap() {
       if (YEAR.includes(element)) {
         temp.push(d[element]);
       }
-    });
+    })
     const sizeScale = Scales.linear(
       min(temp),
       max(temp),
       0,
-      width / YEAR.length
+      (width / YEAR.length) - 3
     );
     ProvScales.push(sizeScale);
   });
@@ -156,10 +155,10 @@ function HeatMap() {
             label="Year Range"
             onChange={handleSelect}
           >
-            <MenuItem value={2017}>Past 5 Years</MenuItem>
+            <MenuItem value={2016}>Past 5 Years</MenuItem>
             <MenuItem value={2011}>Past 10 Years</MenuItem>
-            <MenuItem value={2007}>Past 15 Years</MenuItem>
-            <MenuItem value={2002}>Past 19 Years</MenuItem>
+            <MenuItem value={2006}>Past 15 Years</MenuItem>
+            <MenuItem value={2004}>Past 17 Years</MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -167,7 +166,7 @@ function HeatMap() {
       <svg width={WIDTH} height={HEIGHT}>
         <g transform={`translate(${margin.left}, ${margin.top - 100})`}>
           {garbage.map((d, index) => {
-            return Object.keys(d).map((element, idx) => {
+            return Object.keys(d).map((element) => {
               if (YEAR.includes(element)) {
                 const colormap = Scales.colorSequential(
                   saturationRange[index],
@@ -180,8 +179,7 @@ function HeatMap() {
                     dRegion={d.Region}
                     xScale={xScale}
                     yScale={yScale}
-                    //TODO do somethign about the -9
-                    size={cellSize[idx - 9]}
+                    size={cellSize.shift()}
                     color={colormap(d[element])}
                     setSelectedRegion={setSelectedRegion}
                     setSelectedYear={setSelectedYear}
@@ -197,7 +195,7 @@ function HeatMap() {
             return (
               <g
                 key={s}
-                transform={`translate(${xScale(s) + 15},-8)rotate(60)`}
+                transform={`translate(${xScale(s)},-20)rotate(60)`}
               >
                 <text style={{ textAnchor: "end" }}>{s}</text>
               </g>
@@ -210,7 +208,7 @@ function HeatMap() {
                 key={m}
                 style={{ textAnchor: "end" }}
                 x={-9}
-                y={yScale(m) + 20}
+                y={yScale(m)+3}
               >
                 {m}
               </text>
