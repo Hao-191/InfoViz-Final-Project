@@ -1,13 +1,13 @@
 import React from "react";
 import { csv } from "d3";
 
-const GetGDP = (url, startYear, endYear) => {
+const GetGDP = (url) => {
   const [dataAll, setData] = React.useState(null);
   React.useEffect(() => {
     csv(url).then((data) => {
       data.forEach((d) => {
         Object.keys(d).forEach((k) => {
-          Number(k) >= startYear && Number(k) <= endYear
+          Number(k) >= 2002 && Number(k) <= 2021
             ? (d[k] = +d[k])
             : (d[k] = d[k]);
         });
@@ -18,13 +18,13 @@ const GetGDP = (url, startYear, endYear) => {
   return dataAll;
 };
 
-const GETGarbage = (url, startYear, endYear) => {
+const GETGarbage = (url) => {
   const [dataAll, setData] = React.useState(null);
   React.useEffect(() => {
     csv(url).then((data) => {
       data.forEach((d) => {
         Object.keys(d).forEach((k) => {
-          Number(k) >= startYear && Number(k) <= endYear
+          Number(k) >= 2002 && Number(k) <= 2021
             ? (d[k] = +d[k])
             : (d[k] = d[k]);
         });

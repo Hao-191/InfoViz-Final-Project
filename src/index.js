@@ -27,8 +27,9 @@ function HeatMap() {
   const [tooltipLeft, setTooltipLeft] = React.useState(null);
   const [tooltipTop, setTooltipTop] = React.useState(null);
 
-  const garbage = GetData.GETGarbage(GarbageUrl, startYear, endYear);
-  const GDP = GetData.GetGDP(GDPUrl, startYear, endYear);
+  const garbage = GetData.GETGarbage(GarbageUrl);
+  const GDP = GetData.GetGDP(GDPUrl);
+  console.log(GDP)
 
   // Load dataset
   if (garbage === null || saturationRange === []) {
