@@ -1,2 +1,2 @@
 # InfoViz-Final-Project
-This Project is a course final project
+This project is a course final project
