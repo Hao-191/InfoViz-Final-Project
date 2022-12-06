@@ -151,7 +151,7 @@ function HeatMap() {
   return (
     <React.Fragment>
       {/* Past years selector */}
-      <Box sx={{ maxWidth: 150, margin:"15px" }}>
+      <Box sx={{ margin:"1px", display:"flex", flexDirection:"row" }}>
         <FormControl>
           <InputLabel id="demo-simple-select-label">Past Years</InputLabel>
           <Select
@@ -167,11 +167,10 @@ function HeatMap() {
             <MenuItem value={2004}>Past 17 Years</MenuItem>
           </Select>
         </FormControl>
-      </Box>
+
       {/* Past variable selector */}
-      <Box sx={{ maxWidth: 150,  margin:"15px" }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label1">Variable Select</InputLabel>
+        <FormControl sx={{minWidth: 150, ml:"15px"}}>
+          <InputLabel id="demo-simple-select-label1">Possible Factors</InputLabel>
           <Select
             labelId="demo-simple-select-label1"
             id="demo-simple-select1"

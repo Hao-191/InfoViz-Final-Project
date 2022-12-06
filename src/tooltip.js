@@ -8,7 +8,7 @@ export function Tooltip(props) {
     const divStyle = {
       position: "absolute",
       textAlign: "left",
-      width: "200px",
+      width: "300px",
       height: "130px",
       padding: "2px",
       font: "13px sans-serif",
@@ -25,8 +25,15 @@ export function Tooltip(props) {
         <p>{garbageData.Region}</p>
         <p>Year {year}</p>
         <ul>
-          <li>Volume of Garbage: {garbageData[`${year}`]}</li>
-          <li>{variable}: {factorData[`${year}`]}</li>
+          <li>Volume of Garbage: {garbageData[`${year}`]} (10000 tons)</li>
+          <li>
+            {variable}: {factorData[`${year}`]}{" "}
+            {variable === "GDP"
+              ? "(100 million yuan)"
+              : variable === "Population"
+              ? "(10000 persons)"
+              : ""}
+          </li>
         </ul>
       </div>
     );

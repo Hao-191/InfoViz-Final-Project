@@ -70,7 +70,7 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
-var GetGDP = function GetGDP(url) {
+var GetVariable = function GetVariable(url) {
   var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState2 = _slicedToArray(_React$useState, 2),
     dataAll = _React$useState2[0],
@@ -87,7 +87,7 @@ var GetGDP = function GetGDP(url) {
   }, []);
   return dataAll;
 };
-var GETGarbage = function GETGarbage(url) {
+var GetGarbage = function GetGarbage(url) {
   var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState4 = _slicedToArray(_React$useState3, 2),
     dataAll = _React$useState4[0],
@@ -105,8 +105,8 @@ var GETGarbage = function GETGarbage(url) {
   return dataAll;
 };
 var GetData = {
-  GetGDP: GetGDP,
-  GETGarbage: GETGarbage
+  GetGarbage: GetGarbage,
+  GetVariable: GetVariable
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GetData);
 
@@ -160,10 +160,11 @@ __webpack_require__.r(__webpack_exports__);
 
 function Tooltip(props) {
   var garbageData = props.garbageData,
-    gdpData = props.gdpData,
+    factorData = props.factorData,
     left = props.left,
     top = props.top,
-    year = props.year;
+    year = props.year,
+    variable = props.variable;
   if (left === null) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null);
   } else {
@@ -184,7 +185,7 @@ function Tooltip(props) {
     };
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       style: divStyle
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, garbageData.Region), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Year ", year), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Volume of Garbage: ", garbageData["".concat(year)]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "GDP: ", gdpData["".concat(year)])));
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, garbageData.Region), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Year ", year), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Volume of Garbage: ", garbageData["".concat(year)]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, variable, ": ", factorData["".concat(year)])));
   }
 }
 
@@ -87290,44 +87291,49 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var GDPUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/GDPbyProvince.csv";
 var GarbageUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/VolumeofGarbagebyProvince.csv";
+var PopulationUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/089497b1bcb908f28ed57ba839ae7c9cbca9b8b4/PopulationbyProvince.csv";
 function HeatMap() {
   // Control Year Status
   var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState(2011),
     _React$useState2 = _slicedToArray(_React$useState, 2),
     startYear = _React$useState2[0],
     setStartYear = _React$useState2[1];
-  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState(2020),
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState("GDP"),
     _React$useState4 = _slicedToArray(_React$useState3, 2),
-    endYear = _React$useState4[0],
-    setEndYear = _React$useState4[1];
+    variable = _React$useState4[0],
+    setVariable = _React$useState4[1];
+  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_0__.useState(2020),
+    _React$useState6 = _slicedToArray(_React$useState5, 2),
+    endYear = _React$useState6[0],
+    setEndYear = _React$useState6[1];
 
   // tooltip
-  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
-    _React$useState6 = _slicedToArray(_React$useState5, 2),
-    selectedRegion = _React$useState6[0],
-    setSelectedRegion = _React$useState6[1];
   var _React$useState7 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState8 = _slicedToArray(_React$useState7, 2),
-    selectedYear = _React$useState8[0],
-    setSelectedYear = _React$useState8[1];
+    selectedRegion = _React$useState8[0],
+    setSelectedRegion = _React$useState8[1];
   var _React$useState9 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState10 = _slicedToArray(_React$useState9, 2),
-    tooltipLeft = _React$useState10[0],
-    setTooltipLeft = _React$useState10[1];
+    selectedYear = _React$useState10[0],
+    setSelectedYear = _React$useState10[1];
   var _React$useState11 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState12 = _slicedToArray(_React$useState11, 2),
-    tooltipTop = _React$useState12[0],
-    setTooltipTop = _React$useState12[1];
-  var garbage = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GETGarbage(GarbageUrl);
-  var GDP = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetGDP(GDPUrl);
+    tooltipLeft = _React$useState12[0],
+    setTooltipLeft = _React$useState12[1];
+  var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
+    _React$useState14 = _slicedToArray(_React$useState13, 2),
+    tooltipTop = _React$useState14[0],
+    setTooltipTop = _React$useState14[1];
+  var garbage = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetGarbage(GarbageUrl);
+  var GDP = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetVariable(GDPUrl);
+  var Population = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetVariable(PopulationUrl);
+  var variables = {
+    "GDP": GDP,
+    "Population": Population
+  };
 
   // Load dataset
-  if (garbage === null || saturationRange === []) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("pre", null, "Loading...");
-  }
-
-  // Load dataset
-  if (GDP === null) {
+  if (garbage === null || GDP === null || saturationRange === []) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("pre", null, "Loading...");
   }
 
@@ -87335,7 +87341,7 @@ function HeatMap() {
   var dTooltipGarbage = garbage.filter(function (d) {
     return d.Region === selectedRegion;
   })[0];
-  var dTooltipGDP = GDP.filter(function (d) {
+  var dTooltipFactor = variables[variable].filter(function (d) {
     return d.Region === selectedRegion;
   })[0];
   var WIDTH = (endYear - startYear + 1) * 40 + 150;
@@ -87388,7 +87394,7 @@ function HeatMap() {
 
   //Assign a scale for each Provience
   var ProvScales = [];
-  GDP.map(function (d) {
+  variables[variable].map(function (d) {
     var temp = [];
     Object.keys(d).map(function (element) {
       if (YEAR.includes(element)) {
@@ -87401,7 +87407,7 @@ function HeatMap() {
 
   //Give a size to each cell
   var cellSize = [];
-  GDP.map(function (d, index) {
+  variables[variable].map(function (d, index) {
     Object.keys(d).map(function (element) {
       if (YEAR.includes(element)) {
         cellSize.push(ProvScales[index](d[element]));
@@ -87413,13 +87419,17 @@ function HeatMap() {
     var newStartYear = e.target.value;
     setStartYear(newStartYear);
   };
+  var handleVariable = function handleVariable(e) {
+    e.preventDefault();
+    var newVarible = e.target.value;
+    setVariable(newVarible);
+  };
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Box__WEBPACK_IMPORTED_MODULE_7__["default"], {
     sx: {
-      maxWidth: 150
+      maxWidth: 150,
+      margin: "15px"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_8__["default"], {
-    fullWidth: true
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_8__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_9__["default"], {
     id: "demo-simple-select-label"
   }, "Past Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_10__["default"], {
     labelId: "demo-simple-select-label",
@@ -87435,7 +87445,26 @@ function HeatMap() {
     value: 2006
   }, "Past 15 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_11__["default"], {
     value: 2004
-  }, "Past 17 Years")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
+  }, "Past 17 Years")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Box__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    sx: {
+      maxWidth: 150,
+      margin: "15px"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    fullWidth: true
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    id: "demo-simple-select-label1"
+  }, "Variable Select"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    labelId: "demo-simple-select-label1",
+    id: "demo-simple-select1",
+    value: variable,
+    label: "Variable Select",
+    onChange: handleVariable
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    value: "GDP"
+  }, "GDP"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    value: "Population"
+  }, "Population")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
     width: WIDTH,
     height: HEIGHT
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
@@ -87479,10 +87508,11 @@ function HeatMap() {
     }, m);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_tooltip__WEBPACK_IMPORTED_MODULE_5__.Tooltip, {
     garbageData: dTooltipGarbage,
-    gdpData: dTooltipGDP,
+    factorData: dTooltipFactor,
     left: tooltipLeft,
     top: tooltipTop,
-    year: selectedYear
+    year: selectedYear,
+    variable: variable
   }));
 }
 react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(HeatMap, null), document.getElementById("root"));
