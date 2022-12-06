@@ -171,7 +171,7 @@ function Tooltip(props) {
     var divStyle = {
       position: "absolute",
       textAlign: "left",
-      width: "200px",
+      width: "300px",
       height: "130px",
       padding: "2px",
       font: "13px sans-serif",
@@ -185,7 +185,7 @@ function Tooltip(props) {
     };
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       style: divStyle
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, garbageData.Region), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Year ", year), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Volume of Garbage: ", garbageData["".concat(year)]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, variable, ": ", factorData["".concat(year)])));
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, garbageData.Region), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Year ", year), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Volume of Garbage: ", garbageData["".concat(year)], " (10000 tons)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, variable, ": ", factorData["".concat(year)], " ", variable === "GDP" ? "(100 million yuan)" : variable === "Population" ? "(10000 persons)" : "")));
   }
 }
 
@@ -87344,13 +87344,13 @@ function HeatMap() {
   var dTooltipFactor = variables[variable].filter(function (d) {
     return d.Region === selectedRegion;
   })[0];
-  var WIDTH = (endYear - startYear + 1) * 40 + 150;
-  var HEIGHT = 31 * 50;
+  var WIDTH = (endYear - startYear + 1) * 50 + 200;
+  var HEIGHT = 31 * 60;
   var margin = {
     top: 200,
     right: 40,
     bottom: 110,
-    left: 110
+    left: 160
   };
   var height = HEIGHT - margin.top - margin.bottom;
   var width = WIDTH - margin.left - margin.right;
@@ -87401,7 +87401,7 @@ function HeatMap() {
         temp.push(d[element]);
       }
     });
-    var sizeScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.linear((0,d3__WEBPACK_IMPORTED_MODULE_3__.min)(temp), (0,d3__WEBPACK_IMPORTED_MODULE_3__.max)(temp), 0, width / YEAR.length - 3);
+    var sizeScale = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.linear((0,d3__WEBPACK_IMPORTED_MODULE_3__.min)(temp), (0,d3__WEBPACK_IMPORTED_MODULE_3__.max)(temp), 12, width / YEAR.length - 3);
     ProvScales.push(sizeScale);
   });
 
@@ -87426,8 +87426,9 @@ function HeatMap() {
   };
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Box__WEBPACK_IMPORTED_MODULE_7__["default"], {
     sx: {
-      maxWidth: 150,
-      margin: "15px"
+      margin: "1px",
+      display: "flex",
+      flexDirection: "row"
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_8__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_9__["default"], {
     id: "demo-simple-select-label"
@@ -87445,16 +87446,14 @@ function HeatMap() {
     value: 2006
   }, "Past 15 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_11__["default"], {
     value: 2004
-  }, "Past 17 Years")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Box__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, "Past 17 Years"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_8__["default"], {
     sx: {
-      maxWidth: 150,
-      margin: "15px"
+      minWidth: 150,
+      ml: "15px"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_8__["default"], {
-    fullWidth: true
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_9__["default"], {
     id: "demo-simple-select-label1"
-  }, "Variable Select"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_10__["default"], {
+  }, "Possible Factors"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_10__["default"], {
     labelId: "demo-simple-select-label1",
     id: "demo-simple-select1",
     value: variable,
@@ -87491,7 +87490,7 @@ function HeatMap() {
   }), YEAR.map(function (s) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
       key: s,
-      transform: "translate(".concat(xScale(s), ",-20)rotate(60)")
+      transform: "translate(".concat(xScale(s), ",-40)rotate(60)")
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
       style: {
         textAnchor: "end"
@@ -87503,7 +87502,7 @@ function HeatMap() {
       style: {
         textAnchor: "end"
       },
-      x: -9,
+      x: -50,
       y: yScale(m) + 3
     }, m);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_tooltip__WEBPACK_IMPORTED_MODULE_5__.Tooltip, {
