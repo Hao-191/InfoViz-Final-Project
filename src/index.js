@@ -45,9 +45,9 @@ function HeatMap() {
   //tooltip point filter
   const dTooltipGarbage = garbage.filter((d) => d.Region === selectedRegion)[0];
   const dTooltipFactor = variables[variable].filter((d) => d.Region === selectedRegion)[0];
-  const WIDTH = (endYear - startYear + 1) * 40 + 150;
+  const WIDTH = (endYear - startYear + 1) * 40 + 200;
   const HEIGHT = 31 * 50;
-  const margin = { top: 200, right: 40, bottom: 110, left: 110 };
+  const margin = { top: 200, right: 40, bottom: 110, left: 160 };
   const height = HEIGHT - margin.top - margin.bottom;
   const width = WIDTH - margin.left - margin.right;
 
@@ -215,7 +215,7 @@ function HeatMap() {
 
           {YEAR.map((s) => {
             return (
-              <g key={s} transform={`translate(${xScale(s)},-20)rotate(60)`}>
+              <g key={s} transform={`translate(${xScale(s)},-30)rotate(60)`}>
                 <text style={{ textAnchor: "end" }}>{s}</text>
               </g>
             );
@@ -226,7 +226,7 @@ function HeatMap() {
               <text
                 key={m}
                 style={{ textAnchor: "end" }}
-                x={-9}
+                x={-40}
                 y={yScale(m) + 3}
               >
                 {m}
