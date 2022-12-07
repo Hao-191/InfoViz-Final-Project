@@ -17,7 +17,7 @@ export function Tooltip(props) {
       border: "0px",
       borderRadius: "8px",
       pointerEvents: "none",
-      left: `${left - 300}px`,
+      left: `${left - 100}px`,
       top: `${top}px`,
     };
     return (

@@ -1,4 +1,4 @@
-import { scaleLinear, scaleBand, scaleSequential, scaleDiverging } from "d3";
+import { scaleLinear, scaleBand, scaleSequential, scaleDiverging, scaleOrdinal } from "d3";
 
 export const Scales = {
   linear: (min_value, max_value, start_pos, end_pos) => {
@@ -18,5 +18,11 @@ export const Scales = {
   },
   colorDiverging: (domainArry, colorScheme) => {
     return scaleDiverging(colorScheme).domain(domainArry);
+  },
+  ordinal: (width, year) => {
+    return scaleOrdinal().rangeRoundBands([0, width])
+    .domain(
+      year
+    );
   },
 };

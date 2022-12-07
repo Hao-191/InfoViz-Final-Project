@@ -12,9 +12,16 @@ export function Cell(props) {
     setSelectedYear,
     setTooltipLeft,
     setTooltipTop,
+    setShow,
+    setProvince,
   } = props;
+
   return (
-    <g transform={`translate(${xScale(dYear)-(size/2)}, ${yScale(dRegion)-(size/2)})`}>
+    <g
+      transform={`translate(${xScale(dYear) - size / 2}, ${
+        yScale(dRegion) - size / 2
+      })`}
+    >
       <rect
         width={size}
         height={size}
@@ -25,12 +32,15 @@ export function Cell(props) {
           setSelectedYear(dYear);
           setTooltipLeft(e.pageX);
           setTooltipTop(e.pageY);
+          setShow(true);
+          setProvince(dRegion);
         }}
         onMouseOut={() => {
           setSelectedRegion(null);
           setSelectedYear(null);
           setTooltipLeft(null);
           setTooltipTop(null);
+          setShow(false);
         }}
       />
     </g>

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Cell } from "./cell";
-import { min, max, interpolateYlOrBr } from "d3";
+import { min, max, interpolateYlOrBr, map } from "d3";
 import { Scales } from "./scale";
 import { Tooltip } from "./tooltip";
 import GetData from "./getData";
@@ -10,6 +10,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { csv } from "d3";
+import { ScatterPlot } from "./scatterplot";
 
 const GDPUrl =
   "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/GDPbyProvince.csv";
@@ -18,6 +20,8 @@ const GarbageUrl =
 const PopulationUrl =
   "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/089497b1bcb908f28ed57ba839ae7c9cbca9b8b4/PopulationbyProvince.csv";
 
+const csvUrl =
+  "https://gist.githubusercontent.com/hogwild/3b9aa737bde61dcb4dfa60cde8046e04/raw/citibike2020.csv";
 
 function HeatMap() {
   // Control Year Status
@@ -31,20 +35,25 @@ function HeatMap() {
   const [tooltipLeft, setTooltipLeft] = React.useState(null);
   const [tooltipTop, setTooltipTop] = React.useState(null);
 
+  // show line chart
+  const [show, setShow] = React.useState(false);
+  const [province, setProvince] = React.useState("Beijing");
+
   let garbage = GetData.GetGarbage(GarbageUrl);
   let GDP = GetData.GetVariable(GDPUrl);
-  let Population = GetData.GetVariable(PopulationUrl)
-  const variables = { "GDP": GDP, "Population": Population };
+  let Population = GetData.GetVariable(PopulationUrl);
+  const variables = { GDP: GDP, Population: Population };
 
   // Load dataset
   if (garbage === null || GDP === null || saturationRange === []) {
     return <pre>Loading...</pre>;
   }
 
-
   //tooltip point filter
   const dTooltipGarbage = garbage.filter((d) => d.Region === selectedRegion)[0];
-  const dTooltipFactor = variables[variable].filter((d) => d.Region === selectedRegion)[0];
+  const dTooltipFactor = variables[variable].filter(
+    (d) => d.Region === selectedRegion
+  )[0];
   const WIDTH = (endYear - startYear + 1) * 50 + 200;
   const HEIGHT = 31 * 60;
   const margin = { top: 200, right: 40, bottom: 110, left: 160 };
@@ -121,7 +130,7 @@ function HeatMap() {
       min(temp),
       max(temp),
       12,
-      (width / YEAR.length) - 3
+      width / YEAR.length - 3
     );
     ProvScales.push(sizeScale);
   });
@@ -151,7 +160,7 @@ function HeatMap() {
   return (
     <React.Fragment>
       {/* Past years selector */}
-      <Box sx={{ margin:"1px", display:"flex", flexDirection:"row" }}>
+      <Box sx={{ margin: "1px", display: "flex", flexDirection: "row" }}>
         <FormControl>
           <InputLabel id="demo-simple-select-label">Past Years</InputLabel>
           <Select
@@ -168,9 +177,11 @@ function HeatMap() {
           </Select>
         </FormControl>
 
-      {/* Past variable selector */}
-        <FormControl sx={{minWidth: 150, ml:"15px"}}>
-          <InputLabel id="demo-simple-select-label1">Possible Factors</InputLabel>
+        {/* Past variable selector */}
+        <FormControl sx={{ minWidth: 150, ml: "15px" }}>
+          <InputLabel id="demo-simple-select-label1">
+            Possible Factors
+          </InputLabel>
           <Select
             labelId="demo-simple-select-label1"
             id="demo-simple-select1"
@@ -184,7 +195,7 @@ function HeatMap() {
         </FormControl>
       </Box>
 
-      <svg width={WIDTH} height={HEIGHT} >
+      <svg width="100%" height={HEIGHT}>
         <g transform={`translate(${margin.left}, ${margin.top - 100})`}>
           {garbage.map((d, index) => {
             return Object.keys(d).map((element) => {
@@ -206,6 +217,8 @@ function HeatMap() {
                     setSelectedYear={setSelectedYear}
                     setTooltipLeft={setTooltipLeft}
                     setTooltipTop={setTooltipTop}
+                    setShow={setShow}
+                    setProvince={setProvince}
                   />
                 );
               }
@@ -232,13 +245,56 @@ function HeatMap() {
               </text>
             );
           })}
+
+          {/* Garbage Line Chart */}
+          {show ? (
+            <React.Fragment>
+              <ScatterPlot
+                offsetX={margin.left + 720}
+                offsetY={tooltipTop < 1300 ? tooltipTop + 100 : 1300}
+                ChartData={garbage}
+                province={province}
+                height={280}
+                width={280}
+                startYear={startYear}
+                selectedYear={selectedYear}
+                type="Garbage"
+              />
+              <ScatterPlot
+                offsetX={margin.left + 720}
+                offsetY={tooltipTop < 1300 ? tooltipTop - 230 : 950}
+                ChartData={
+                  variable === "GDP"
+                    ? GDP
+                    : variable === "Population"
+                    ? Population
+                    : garbage
+                }
+                province={province}
+                height={280}
+                width={280}
+                startYear={startYear}
+                selectedYear={selectedYear}
+                type={
+                  variable === "GDP"
+                    ? "GDP"
+                    : variable === "Population"
+                    ? "Population"
+                    : "Garbage"
+                }
+              />
+            </React.Fragment>
+          ) : (
+            <React.Fragment />
+          )}
         </g>
       </svg>
+
       <Tooltip
         garbageData={dTooltipGarbage}
         factorData={dTooltipFactor}
-        left={tooltipLeft}
-        top={tooltipTop}
+        left={tooltipLeft < 800 ? tooltipLeft : 800}
+        top={tooltipTop - 50}
         year={selectedYear}
         variable={variable}
       ></Tooltip>
