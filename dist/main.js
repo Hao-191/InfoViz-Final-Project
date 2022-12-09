@@ -40,14 +40,14 @@ function XAxis(props) {
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
         style: {
           textAnchor: 'middle',
-          fontSize: '10px'
+          fontSize: '12px'
         },
         y: 20
       }, tickValue));
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
       style: {
         textAnchor: 'end',
-        fontSize: '10px'
+        fontSize: '12px'
       },
       transform: "translate(".concat(width, ", ").concat(height - 10, ")")
     }, axisLabel));
@@ -70,13 +70,13 @@ function YAxis(props) {
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
       style: {
         textAnchor: 'end',
-        fontSize: '10px'
+        fontSize: '12px'
       }
     }, tickValue));
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
     style: {
       textAnchor: 'end',
-      fontSize: '10px'
+      fontSize: '12px'
     },
     transform: "translate(20, 0) rotate(-90)"
   }, axisLabel));
@@ -107,7 +107,9 @@ function Cell(props) {
     setSelectedRegion = props.setSelectedRegion,
     setSelectedYear = props.setSelectedYear,
     setTooltipLeft = props.setTooltipLeft,
-    setTooltipTop = props.setTooltipTop;
+    setTooltipTop = props.setTooltipTop,
+    setShow = props.setShow,
+    setProvince = props.setProvince;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(xScale(dYear) - size / 2, ", ").concat(yScale(dRegion) - size / 2, ")")
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
@@ -120,12 +122,15 @@ function Cell(props) {
       setSelectedYear(dYear);
       setTooltipLeft(e.pageX);
       setTooltipTop(e.pageY);
+      setShow(true);
+      setProvince(dRegion);
     },
     onMouseOut: function onMouseOut() {
       setSelectedRegion(null);
       setSelectedYear(null);
       setTooltipLeft(null);
       setTooltipTop(null);
+      setShow(false);
     }
   }));
 }
@@ -195,6 +200,68 @@ var GetData = {
 
 /***/ }),
 
+/***/ "./src/legend.js":
+/*!***********************!*\
+  !*** ./src/legend.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Legend": () => (/* binding */ Legend)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
+
+
+function Legend(props) {
+  var x = props.x,
+    y = props.y,
+    width = props.width,
+    height = props.height,
+    colormap = props.colormap;
+  var xScale = (0,d3__WEBPACK_IMPORTED_MODULE_1__.scaleLinear)().range([x, x + width]).domain([0, 1]).nice();
+  var ticks = xScale.ticks(4);
+  var text = ["Low", " ", " ", " ", " ", "High"];
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("defs", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("linearGradient", {
+    id: "gradient",
+    x1: "0%",
+    y1: "0%",
+    x2: "100%",
+    y2: "0%"
+  }, ticks.map(function (tick) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("stop", {
+      key: "".concat(tick, "stop"),
+      offset: "".concat(100 * tick, "%"),
+      stopColor: colormap(tick)
+    });
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
+    x: x,
+    y: y,
+    width: width,
+    height: height,
+    style: {
+      fill: "url(#gradient)"
+    }
+  }), ticks.map(function (tick) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
+      key: tick,
+      transform: "translate(".concat(xScale(tick), ", ").concat(y, ")")
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("line", {
+      y2: height,
+      stroke: 'black'
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
+      style: {
+        textAnchor: 'middle'
+      },
+      y: height + 15
+    }, text.shift()));
+  }));
+}
+
+/***/ }),
+
 /***/ "./src/points.js":
 /*!***********************!*\
   !*** ./src/points.js ***!
@@ -209,20 +276,58 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 function Points(props) {
-  var data = props.data,
+  var lineChart = props.lineChart,
     xScale = props.xScale,
-    yScale = props.yScale;
-  console.log(data);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", null, data.map(function (d) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("circle", {
-      key: d.station + "S",
-      cx: xScale(d.tripdurationS),
-      cy: yScale(d.tripdurationE),
-      r: 5,
-      stroke: "black",
-      fill: "steelblue"
-    });
-  }));
+    yScale = props.yScale,
+    selectedYear = props.selectedYear;
+  var getColor = function getColor(selectedYear, year) {
+    if (year === selectedYear) {
+      return "red";
+    } else {
+      return "steelblue";
+    }
+  };
+  var getRadius = function getRadius(selectedYear, year) {
+    if (year === selectedYear) {
+      return 10;
+    } else {
+      return 5;
+    }
+  };
+  if (selectedYear === null) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", null, lineChart.map(function (d) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("circle", {
+        key: d.value + "S",
+        cx: xScale(Number(d.year)),
+        cy: yScale(d.value),
+        r: getRadius(selectedYear, d.year),
+        stroke: "black",
+        fill: getColor(selectedYear, d.year)
+      });
+    }));
+  } else {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", null, lineChart.map(function (d) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("circle", {
+        key: d.value,
+        cx: xScale(Number(d.year)),
+        cy: yScale(d.value),
+        r: getRadius(selectedYear, d.year),
+        stroke: "black",
+        fill: getColor(selectedYear, d.year)
+      });
+    }), lineChart.filter(function (d) {
+      return d.year === selectedYear;
+    }).map(function (d) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("circle", {
+        key: d.value,
+        cx: xScale(Number(d.year)),
+        cy: yScale(d.value),
+        r: getRadius(selectedYear, d.year),
+        stroke: "black",
+        fill: getColor(selectedYear, d.year)
+      });
+    }));
+  }
 }
 
 /***/ }),
@@ -287,27 +392,43 @@ __webpack_require__.r(__webpack_exports__);
 function ScatterPlot(props) {
   var offsetX = props.offsetX,
     offsetY = props.offsetY,
-    data = props.data,
+    ChartData = props.ChartData,
+    province = props.province,
     height = props.height,
-    width = props.width;
-  var YEARS = ["2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"];
-  var xScale = _scale__WEBPACK_IMPORTED_MODULE_2__.Scales.linear(0, 2020, 0, width);
-  var yScale = _scale__WEBPACK_IMPORTED_MODULE_2__.Scales.linear(0, (0,d3__WEBPACK_IMPORTED_MODULE_1__.max)(data, function (d) {
-    return d.tripdurationE;
+    width = props.width,
+    startYear = props.startYear,
+    selectedYear = props.selectedYear,
+    type = props.type;
+  console.log(type);
+  var lineChart = [];
+  var line = ChartData.filter(function (d) {
+    return d.Region === province;
+  });
+  Object.keys(line[0]).map(function (key) {
+    key >= Number(startYear) && key <= 2020 ? lineChart.push({
+      year: key,
+      value: line[0][key]
+    }) : null;
+  });
+  var xScale = _scale__WEBPACK_IMPORTED_MODULE_2__.Scales.linear(Number(startYear) - 1, Number((0,d3__WEBPACK_IMPORTED_MODULE_1__.max)(lineChart, function (d) {
+    return d.year;
+  })), 0, width);
+  var yScale = _scale__WEBPACK_IMPORTED_MODULE_2__.Scales.linear((0,d3__WEBPACK_IMPORTED_MODULE_1__.min)(lineChart, function (d) {
+    return d.value;
+  }) - 20, (0,d3__WEBPACK_IMPORTED_MODULE_1__.max)(lineChart, function (d) {
+    return d.value;
   }), height, 0);
-  //console.log('X scale', xScale);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(offsetX, ", ").concat(offsetY, ")")
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_points__WEBPACK_IMPORTED_MODULE_3__.Points, {
-    data: data,
+    lineChart: lineChart,
     xScale: xScale,
     yScale: yScale,
-    height: height,
-    width: width
+    selectedYear: selectedYear
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_axes__WEBPACK_IMPORTED_MODULE_4__.YAxis, {
     yScale: yScale,
     height: height,
-    axisLabel: "Trip duration end in"
+    axisLabel: type === "Garbage" ? "Volume of Garbage Deposit" : type === "Population" ? "Population" : type === "GDP" ? "Gross Region Product" : ""
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_axes__WEBPACK_IMPORTED_MODULE_4__.XAxis, {
     chartType: "scatter",
     xScale: xScale,
@@ -354,7 +475,7 @@ function Tooltip(props) {
       border: "0px",
       borderRadius: "8px",
       pointerEvents: "none",
-      left: "".concat(left - 300, "px"),
+      left: "".concat(left - 100, "px"),
       top: "".concat(top, "px")
     };
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -87440,12 +87561,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scale__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scale */ "./src/scale.js");
 /* harmony import */ var _tooltip__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tooltip */ "./src/tooltip.js");
 /* harmony import */ var _getData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./getData */ "./src/getData.js");
-/* harmony import */ var _mui_material_Box__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @mui/material/Box */ "./node_modules/@mui/material/esm/Box/Box.js");
-/* harmony import */ var _mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @mui/material/InputLabel */ "./node_modules/@mui/material/esm/InputLabel/InputLabel.js");
-/* harmony import */ var _mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @mui/material/MenuItem */ "./node_modules/@mui/material/esm/MenuItem/MenuItem.js");
-/* harmony import */ var _mui_material_FormControl__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @mui/material/FormControl */ "./node_modules/@mui/material/esm/FormControl/FormControl.js");
-/* harmony import */ var _mui_material_Select__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @mui/material/Select */ "./node_modules/@mui/material/esm/Select/Select.js");
+/* harmony import */ var _mui_material_Box__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @mui/material/Box */ "./node_modules/@mui/material/esm/Box/Box.js");
+/* harmony import */ var _mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @mui/material/InputLabel */ "./node_modules/@mui/material/esm/InputLabel/InputLabel.js");
+/* harmony import */ var _mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @mui/material/MenuItem */ "./node_modules/@mui/material/esm/MenuItem/MenuItem.js");
+/* harmony import */ var _mui_material_FormControl__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @mui/material/FormControl */ "./node_modules/@mui/material/esm/FormControl/FormControl.js");
+/* harmony import */ var _mui_material_Select__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @mui/material/Select */ "./node_modules/@mui/material/esm/Select/Select.js");
 /* harmony import */ var _scatterplot__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./scatterplot */ "./src/scatterplot.js");
+/* harmony import */ var _legend__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./legend */ "./src/legend.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -87466,88 +87588,65 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var GDPUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/GDPbyProvince.csv";
 var GarbageUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/VolumeofGarbagebyProvince.csv";
 var PopulationUrl = "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/089497b1bcb908f28ed57ba839ae7c9cbca9b8b4/PopulationbyProvince.csv";
 var csvUrl = "https://gist.githubusercontent.com/hogwild/3b9aa737bde61dcb4dfa60cde8046e04/raw/citibike2020.csv";
-
-//function for loading the data
-function useData(csvPath) {
-  var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
-    _React$useState2 = _slicedToArray(_React$useState, 2),
-    dataAll = _React$useState2[0],
-    setData = _React$useState2[1];
-  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
-    (0,d3__WEBPACK_IMPORTED_MODULE_3__.csv)(csvPath).then(function (data) {
-      data.forEach(function (d) {
-        d.start = +d.start;
-        d.tripdurationS = +d.tripdurationS;
-        d.end = +d.end;
-        d.tripdurationE = +d.tripdurationE;
-      });
-      setData(data);
-    });
-  }, []);
-  return dataAll;
-}
 function HeatMap() {
   // Control Year Status
-  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState(2011),
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState(2011),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    startYear = _React$useState2[0],
+    setStartYear = _React$useState2[1];
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState("GDP"),
     _React$useState4 = _slicedToArray(_React$useState3, 2),
-    startYear = _React$useState4[0],
-    setStartYear = _React$useState4[1];
-  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_0__.useState("GDP"),
+    variable = _React$useState4[0],
+    setVariable = _React$useState4[1];
+  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_0__.useState(2020),
     _React$useState6 = _slicedToArray(_React$useState5, 2),
-    variable = _React$useState6[0],
-    setVariable = _React$useState6[1];
-  var _React$useState7 = react__WEBPACK_IMPORTED_MODULE_0__.useState(2020),
-    _React$useState8 = _slicedToArray(_React$useState7, 2),
-    endYear = _React$useState8[0],
-    setEndYear = _React$useState8[1];
+    endYear = _React$useState6[0],
+    setEndYear = _React$useState6[1];
 
   // tooltip
+  var _React$useState7 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
+    _React$useState8 = _slicedToArray(_React$useState7, 2),
+    selectedRegion = _React$useState8[0],
+    setSelectedRegion = _React$useState8[1];
   var _React$useState9 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState10 = _slicedToArray(_React$useState9, 2),
-    selectedRegion = _React$useState10[0],
-    setSelectedRegion = _React$useState10[1];
+    selectedYear = _React$useState10[0],
+    setSelectedYear = _React$useState10[1];
   var _React$useState11 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState12 = _slicedToArray(_React$useState11, 2),
-    selectedYear = _React$useState12[0],
-    setSelectedYear = _React$useState12[1];
+    tooltipLeft = _React$useState12[0],
+    setTooltipLeft = _React$useState12[1];
   var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState14 = _slicedToArray(_React$useState13, 2),
-    tooltipLeft = _React$useState14[0],
-    setTooltipLeft = _React$useState14[1];
-  var _React$useState15 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
+    tooltipTop = _React$useState14[0],
+    setTooltipTop = _React$useState14[1];
+
+  // show line chart
+  var _React$useState15 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
     _React$useState16 = _slicedToArray(_React$useState15, 2),
-    tooltipTop = _React$useState16[0],
-    setTooltipTop = _React$useState16[1];
-  var _React$useState17 = react__WEBPACK_IMPORTED_MODULE_0__.useState("4"),
+    show = _React$useState16[0],
+    setShow = _React$useState16[1];
+  var _React$useState17 = react__WEBPACK_IMPORTED_MODULE_0__.useState("Beijing"),
     _React$useState18 = _slicedToArray(_React$useState17, 2),
-    month = _React$useState18[0],
-    setMonth = _React$useState18[1];
+    province = _React$useState18[0],
+    setProvince = _React$useState18[1];
   var garbage = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetGarbage(GarbageUrl);
   var GDP = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetVariable(GDPUrl);
   var Population = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetVariable(PopulationUrl);
   var variables = {
-    "GDP": GDP,
-    "Population": Population
+    GDP: GDP,
+    Population: Population
   };
-  var dataAll = useData(csvUrl);
-  if (!dataAll) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("pre", null, "Loading...");
-  }
 
   // Load dataset
   if (garbage === null || GDP === null || saturationRange === []) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("pre", null, "Loading...");
   }
-  var MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  //get the monthly data
-  var data = dataAll.filter(function (d) {
-    return d.month === MONTH[month];
-  });
-  console.log(data);
 
   //tooltip point filter
   var dTooltipGarbage = garbage.filter(function (d) {
@@ -87636,44 +87735,45 @@ function HeatMap() {
     var newVarible = e.target.value;
     setVariable(newVarible);
   };
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Box__WEBPACK_IMPORTED_MODULE_8__["default"], {
+  var colorlegend = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.colorSequential([0, 1], d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Box__WEBPACK_IMPORTED_MODULE_9__["default"], {
     sx: {
       margin: "1px",
       display: "flex",
       flexDirection: "row"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_9__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_10__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_10__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_11__["default"], {
     id: "demo-simple-select-label"
-  }, "Past Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_11__["default"], {
+  }, "Past Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_12__["default"], {
     labelId: "demo-simple-select-label",
     id: "demo-simple-select",
     value: startYear,
     label: "Year Range",
     onChange: handleSelect
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
     value: 2016
-  }, "Past 5 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, "Past 5 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
     value: 2011
-  }, "Past 10 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, "Past 10 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
     value: 2006
-  }, "Past 15 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, "Past 15 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
     value: 2004
-  }, "Past 17 Years"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  }, "Past 17 Years"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_10__["default"], {
     sx: {
       minWidth: 150,
       ml: "15px"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_10__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_11__["default"], {
     id: "demo-simple-select-label1"
-  }, "Possible Factors"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_11__["default"], {
+  }, "Possible Factors"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_12__["default"], {
     labelId: "demo-simple-select-label1",
     id: "demo-simple-select1",
     value: variable,
     label: "Variable Select",
     onChange: handleVariable
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
     value: "GDP"
-  }, "GDP"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, "GDP"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
     value: "Population"
   }, "Population")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
     width: "100%",
@@ -87695,7 +87795,9 @@ function HeatMap() {
           setSelectedRegion: setSelectedRegion,
           setSelectedYear: setSelectedYear,
           setTooltipLeft: setTooltipLeft,
-          setTooltipTop: setTooltipTop
+          setTooltipTop: setTooltipTop,
+          setShow: setShow,
+          setProvince: setProvince
         });
       }
     });
@@ -87717,17 +87819,37 @@ function HeatMap() {
       x: -50,
       y: yScale(m) + 3
     }, m);
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_scatterplot__WEBPACK_IMPORTED_MODULE_7__.ScatterPlot, {
-    offsetX: margin.left + 700,
-    offsetY: margin.top,
-    data: data,
-    height: 300,
-    width: 300
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_tooltip__WEBPACK_IMPORTED_MODULE_5__.Tooltip, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_legend__WEBPACK_IMPORTED_MODULE_8__.Legend, {
+    x: width + 40,
+    y: -100,
+    width: 250,
+    height: 20,
+    colormap: colorlegend
+  }), show ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_scatterplot__WEBPACK_IMPORTED_MODULE_7__.ScatterPlot, {
+    offsetX: margin.left + 720,
+    offsetY: tooltipTop < 1300 ? tooltipTop + 100 : 1300,
+    ChartData: garbage,
+    province: province,
+    height: 280,
+    width: 280,
+    startYear: startYear,
+    selectedYear: selectedYear,
+    type: "Garbage"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_scatterplot__WEBPACK_IMPORTED_MODULE_7__.ScatterPlot, {
+    offsetX: margin.left + 720,
+    offsetY: tooltipTop < 1300 ? tooltipTop - 230 : 950,
+    ChartData: variable === "GDP" ? GDP : variable === "Population" ? Population : garbage,
+    province: province,
+    height: 280,
+    width: 280,
+    startYear: startYear,
+    selectedYear: selectedYear,
+    type: variable === "GDP" ? "GDP" : variable === "Population" ? "Population" : "Garbage"
+  })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_tooltip__WEBPACK_IMPORTED_MODULE_5__.Tooltip, {
     garbageData: dTooltipGarbage,
     factorData: dTooltipFactor,
-    left: tooltipLeft,
-    top: tooltipTop,
+    left: tooltipLeft < 800 ? tooltipLeft : 800,
+    top: tooltipTop - 50,
     year: selectedYear,
     variable: variable
   }));
