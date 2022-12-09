@@ -249,7 +249,8 @@ function HeatMap() {
             );
           })}
 
-          <Legend x={width+50} y={0} width={250} height={20} colormap={colorlegend}/> 
+          {/*Legend */}
+          <Legend x={width+40} y={-100} width={250} height={20} colormap={colorlegend}/> 
 
           {/* Garbage Line Chart */}
           {show ? (
