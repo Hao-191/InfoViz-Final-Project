@@ -12,6 +12,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { csv } from "d3";
 import { ScatterPlot } from "./scatterplot";
+import { Legend } from "./legend";
 
 const GDPUrl =
   "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/GDPbyProvince.csv";
@@ -157,6 +158,8 @@ function HeatMap() {
     setVariable(newVarible);
   };
 
+  const colorlegend = Scales.colorSequential([0,1], interpolateYlOrBr);
+
   return (
     <React.Fragment>
       {/* Past years selector */}
@@ -245,6 +248,8 @@ function HeatMap() {
               </text>
             );
           })}
+
+          <Legend x={width+50} y={0} width={250} height={20} colormap={colorlegend}/> 
 
           {/* Garbage Line Chart */}
           {show ? (
