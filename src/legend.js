@@ -5,7 +5,7 @@ export function Legend(props) {
     const {x, y, width, height, colormap} = props; 
     const xScale = scaleLinear().range([x, x+width]).domain([0,1]).nice();
     const ticks = xScale.ticks(4);
-    const text = ["Low VoG", " ", " ", " ", " ", "High VoG"]
+    const text = ["Low Vol of Garbage", " ", " ", " ", " ", "High Vol of Garbage"]
     return <g>
         <defs>
             <linearGradient id={"gradient"} x1="0%" y1="0%" x2="100%" y2="0%">

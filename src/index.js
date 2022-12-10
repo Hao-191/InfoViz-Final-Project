@@ -199,7 +199,7 @@ function HeatMap() {
       </Box>
 
       <svg width="100%" height={HEIGHT}>
-        <g transform={`translate(${margin.left}, ${margin.top - 100})`}>
+        <g transform={`translate(${margin.left}, ${margin.top - 50})`}>
           {garbage.map((d, index) => {
             return Object.keys(d).map((element) => {
               if (YEAR.includes(element)) {
@@ -249,14 +249,14 @@ function HeatMap() {
             );
           })}
 
-          {/*Legend */}
-          <Legend x={width+40} y={-100} width={250} height={20} colormap={colorlegend}/> 
+          /* Legend
+          <Legend x={width+40} y={-150} width={250} height={20} colormap={colorlegend}/>
 
           {/* Garbage Line Chart */}
           {show ? (
             <React.Fragment>
               <ScatterPlot
-                offsetX={margin.left + 720}
+                offsetX={width + 100}
                 offsetY={tooltipTop < 1300 ? tooltipTop + 100 : 1300}
                 ChartData={garbage}
                 province={province}
@@ -267,7 +267,7 @@ function HeatMap() {
                 type="Garbage"
               />
               <ScatterPlot
-                offsetX={margin.left + 720}
+                offsetX={width + 100}
                 offsetY={tooltipTop < 1300 ? tooltipTop - 230 : 950}
                 ChartData={
                   variable === "GDP"
