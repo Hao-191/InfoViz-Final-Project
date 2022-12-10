@@ -22,7 +22,6 @@ function XAxis(props) {
     height = props.height,
     width = props.width,
     axisLabel = props.axisLabel;
-  //console.log('xScale', xScale)
   if (chartType === "scatter") {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("line", {
       x1: 0,
@@ -137,6 +136,116 @@ function Cell(props) {
 
 /***/ }),
 
+/***/ "./src/components/line.js":
+/*!********************************!*\
+  !*** ./src/components/line.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var d3_selection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! d3-selection */ "./node_modules/d3-selection/src/select.js");
+/* harmony import */ var d3_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3-selection */ "./node_modules/d3-selection/src/selectAll.js");
+/* harmony import */ var d3_transition__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3-transition */ "./node_modules/d3-transition/src/index.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var Line = /*#__PURE__*/function (_React$Component) {
+  _inherits(Line, _React$Component);
+  var _super = _createSuper(Line);
+  function Line() {
+    var _this;
+    _classCallCheck(this, Line);
+    _this = _super.call(this);
+    _this.ref = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createRef();
+    return _this;
+  }
+  _createClass(Line, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var node = this.ref.current;
+      var _this$props = this.props,
+        xScale = _this$props.xScale,
+        yScale = _this$props.yScale,
+        data = _this$props.data,
+        lineGenerator = _this$props.lineGenerator;
+      var initialData = data.map(function (d) {
+        return {
+          name: d.name,
+          value: 0
+        };
+      });
+      (0,d3_selection__WEBPACK_IMPORTED_MODULE_2__["default"])(node).append('path').datum(initialData).attr('id', 'line').attr('stroke', 'black').attr('stroke-width', 2).attr('fill', 'none').attr('d', lineGenerator);
+
+      // select(node)
+      //   .selectAll('circle')
+      //   .data(data)
+      //   .enter()
+      //   .append('circle')
+      //   .attr('class', 'circle')
+      //   .attr('stroke', '#ECC417')
+      //   .attr('stroke-width', '2')
+      //   .attr('fill', '#333')
+      //   .attr('r', 3)
+      //   .attr('cx', (d, key) => xScale(key))
+      //   .attr('cy', d => yScale(d.count));
+
+      this.updateChart();
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      this.updateChart();
+    }
+  }, {
+    key: "updateChart",
+    value: function updateChart() {
+      var _this$props2 = this.props,
+        lineGenerator = _this$props2.lineGenerator,
+        xScale = _this$props2.xScale,
+        yScale = _this$props2.yScale,
+        data = _this$props2.data;
+      var t = (0,d3_transition__WEBPACK_IMPORTED_MODULE_1__.transition)().duration(1000);
+      var line = (0,d3_selection__WEBPACK_IMPORTED_MODULE_2__["default"])('#line');
+      var dot = (0,d3_selection__WEBPACK_IMPORTED_MODULE_3__["default"])('.circle');
+      line.datum(data).transition(t).attr('d', lineGenerator);
+
+      // dot
+      //   .data(data)
+      //   .transition(t)
+      //   .attr('cx', (d, key) => xScale(key))
+      //   .attr('cy', d => yScale(d.count));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
+        className: "line-group",
+        ref: this.ref
+      });
+    }
+  }]);
+  return Line;
+}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Line);
+
+/***/ }),
+
 /***/ "./src/getData.js":
 /*!************************!*\
   !*** ./src/getData.js ***!
@@ -223,7 +332,7 @@ function Legend(props) {
     colormap = props.colormap;
   var xScale = (0,d3__WEBPACK_IMPORTED_MODULE_1__.scaleLinear)().range([x, x + width]).domain([0, 1]).nice();
   var ticks = xScale.ticks(4);
-  var text = ["Low", " ", " ", " ", " ", "High"];
+  var text = ["Low Vol of Garbage", " ", " ", " ", " ", "High Vol of Garbage"];
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("defs", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("linearGradient", {
     id: "gradient",
     x1: "0%",
@@ -282,16 +391,16 @@ function Points(props) {
     selectedYear = props.selectedYear;
   var getColor = function getColor(selectedYear, year) {
     if (year === selectedYear) {
-      return "red";
+      return "lightblue";
     } else {
-      return "steelblue";
+      return "orange";
     }
   };
   var getRadius = function getRadius(selectedYear, year) {
     if (year === selectedYear) {
       return 10;
     } else {
-      return 5;
+      return 3;
     }
   };
   if (selectedYear === null) {
@@ -384,6 +493,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scale__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scale */ "./src/scale.js");
 /* harmony import */ var _points__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./points */ "./src/points.js");
 /* harmony import */ var _axes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./axes */ "./src/axes.js");
+/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/curve/monotone.js");
+/* harmony import */ var _components_line__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/line */ "./src/components/line.js");
+
+
 
 
 
@@ -399,7 +512,6 @@ function ScatterPlot(props) {
     startYear = props.startYear,
     selectedYear = props.selectedYear,
     type = props.type;
-  console.log(type);
   var lineChart = [];
   var line = ChartData.filter(function (d) {
     return d.Region === province;
@@ -418,6 +530,11 @@ function ScatterPlot(props) {
   }) - 20, (0,d3__WEBPACK_IMPORTED_MODULE_1__.max)(lineChart, function (d) {
     return d.value;
   }), height, 0);
+  var lineGenerator = line().x(function (d) {
+    return xScale(d.year);
+  }).y(function (d) {
+    return yScale(d.value);
+  }).curve(d3_shape__WEBPACK_IMPORTED_MODULE_6__.monotoneX);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(offsetX, ", ").concat(offsetY, ")")
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_points__WEBPACK_IMPORTED_MODULE_3__.Points, {
@@ -435,6 +552,13 @@ function ScatterPlot(props) {
     height: height,
     width: width,
     axisLabel: "Year"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_line__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    data: lineChart,
+    xScale: xScale,
+    yScale: yScale,
+    lineGenerator: lineGenerator,
+    width: width,
+    height: height
   }));
 }
 
@@ -13298,6 +13422,251 @@ function getSvgIconUtilityClass(slot) {
 }
 const svgIconClasses = (0,_mui_utils__WEBPACK_IMPORTED_MODULE_1__["default"])('MuiSvgIcon', ['root', 'colorPrimary', 'colorSecondary', 'colorAction', 'colorError', 'colorDisabled', 'fontSizeInherit', 'fontSizeSmall', 'fontSizeMedium', 'fontSizeLarge']);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (svgIconClasses);
+
+/***/ }),
+
+/***/ "./node_modules/@mui/material/esm/Typography/Typography.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@mui/material/esm/Typography/Typography.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TypographyRoot": () => (/* binding */ TypographyRoot),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.m.js");
+/* harmony import */ var _mui_system__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @mui/system */ "./node_modules/@mui/system/esm/styleFunctionSx/extendSxProp.js");
+/* harmony import */ var _mui_base__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @mui/base */ "./node_modules/@mui/utils/esm/composeClasses/composeClasses.js");
+/* harmony import */ var _styles_styled__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../styles/styled */ "./node_modules/@mui/material/esm/styles/styled.js");
+/* harmony import */ var _styles_useThemeProps__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../styles/useThemeProps */ "./node_modules/@mui/material/esm/styles/useThemeProps.js");
+/* harmony import */ var _utils_capitalize__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/capitalize */ "./node_modules/@mui/material/esm/utils/capitalize.js");
+/* harmony import */ var _typographyClasses__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./typographyClasses */ "./node_modules/@mui/material/esm/Typography/typographyClasses.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+
+const _excluded = ["align", "className", "component", "gutterBottom", "noWrap", "paragraph", "variant", "variantMapping"];
+
+
+
+
+
+
+
+
+
+
+const useUtilityClasses = ownerState => {
+  const {
+    align,
+    gutterBottom,
+    noWrap,
+    paragraph,
+    variant,
+    classes
+  } = ownerState;
+  const slots = {
+    root: ['root', variant, ownerState.align !== 'inherit' && `align${(0,_utils_capitalize__WEBPACK_IMPORTED_MODULE_5__["default"])(align)}`, gutterBottom && 'gutterBottom', noWrap && 'noWrap', paragraph && 'paragraph']
+  };
+  return (0,_mui_base__WEBPACK_IMPORTED_MODULE_6__["default"])(slots, _typographyClasses__WEBPACK_IMPORTED_MODULE_7__.getTypographyUtilityClass, classes);
+};
+const TypographyRoot = (0,_styles_styled__WEBPACK_IMPORTED_MODULE_8__["default"])('span', {
+  name: 'MuiTypography',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, ownerState.variant && styles[ownerState.variant], ownerState.align !== 'inherit' && styles[`align${(0,_utils_capitalize__WEBPACK_IMPORTED_MODULE_5__["default"])(ownerState.align)}`], ownerState.noWrap && styles.noWrap, ownerState.gutterBottom && styles.gutterBottom, ownerState.paragraph && styles.paragraph];
+  }
+})(({
+  theme,
+  ownerState
+}) => (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__["default"])({
+  margin: 0
+}, ownerState.variant && theme.typography[ownerState.variant], ownerState.align !== 'inherit' && {
+  textAlign: ownerState.align
+}, ownerState.noWrap && {
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap'
+}, ownerState.gutterBottom && {
+  marginBottom: '0.35em'
+}, ownerState.paragraph && {
+  marginBottom: 16
+}));
+const defaultVariantMapping = {
+  h1: 'h1',
+  h2: 'h2',
+  h3: 'h3',
+  h4: 'h4',
+  h5: 'h5',
+  h6: 'h6',
+  subtitle1: 'h6',
+  subtitle2: 'h6',
+  body1: 'p',
+  body2: 'p',
+  inherit: 'p'
+};
+
+// TODO v6: deprecate these color values in v5.x and remove the transformation in v6
+const colorTransformations = {
+  primary: 'primary.main',
+  textPrimary: 'text.primary',
+  secondary: 'secondary.main',
+  textSecondary: 'text.secondary',
+  error: 'error.main'
+};
+const transformDeprecatedColors = color => {
+  return colorTransformations[color] || color;
+};
+const Typography = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__.forwardRef(function Typography(inProps, ref) {
+  const themeProps = (0,_styles_useThemeProps__WEBPACK_IMPORTED_MODULE_9__["default"])({
+    props: inProps,
+    name: 'MuiTypography'
+  });
+  const color = transformDeprecatedColors(themeProps.color);
+  const props = (0,_mui_system__WEBPACK_IMPORTED_MODULE_10__["default"])((0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__["default"])({}, themeProps, {
+    color
+  }));
+  const {
+      align = 'inherit',
+      className,
+      component,
+      gutterBottom = false,
+      noWrap = false,
+      paragraph = false,
+      variant = 'body1',
+      variantMapping = defaultVariantMapping
+    } = props,
+    other = (0,_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(props, _excluded);
+  const ownerState = (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__["default"])({}, props, {
+    align,
+    color,
+    className,
+    component,
+    gutterBottom,
+    noWrap,
+    paragraph,
+    variant,
+    variantMapping
+  });
+  const Component = component || (paragraph ? 'p' : variantMapping[variant] || defaultVariantMapping[variant]) || 'span';
+  const classes = useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(TypographyRoot, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__["default"])({
+    as: Component,
+    ref: ref,
+    ownerState: ownerState,
+    className: (0,clsx__WEBPACK_IMPORTED_MODULE_3__["default"])(classes.root, className)
+  }, other));
+});
+ true ? Typography.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
+  /**
+   * Set the text-align on the component.
+   * @default 'inherit'
+   */
+  align: prop_types__WEBPACK_IMPORTED_MODULE_11___default().oneOf(['center', 'inherit', 'justify', 'left', 'right']),
+  /**
+   * The content of the component.
+   */
+  children: (prop_types__WEBPACK_IMPORTED_MODULE_11___default().node),
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: (prop_types__WEBPACK_IMPORTED_MODULE_11___default().object),
+  /**
+   * @ignore
+   */
+  className: (prop_types__WEBPACK_IMPORTED_MODULE_11___default().string),
+  /**
+   * The component used for the root node.
+   * Either a string to use a HTML element or a component.
+   */
+  component: (prop_types__WEBPACK_IMPORTED_MODULE_11___default().elementType),
+  /**
+   * If `true`, the text will have a bottom margin.
+   * @default false
+   */
+  gutterBottom: (prop_types__WEBPACK_IMPORTED_MODULE_11___default().bool),
+  /**
+   * If `true`, the text will not wrap, but instead will truncate with a text overflow ellipsis.
+   *
+   * Note that text overflow can only happen with block or inline-block level elements
+   * (the element needs to have a width in order to overflow).
+   * @default false
+   */
+  noWrap: (prop_types__WEBPACK_IMPORTED_MODULE_11___default().bool),
+  /**
+   * If `true`, the element will be a paragraph element.
+   * @default false
+   */
+  paragraph: (prop_types__WEBPACK_IMPORTED_MODULE_11___default().bool),
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: prop_types__WEBPACK_IMPORTED_MODULE_11___default().oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_11___default().arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_11___default().oneOfType([(prop_types__WEBPACK_IMPORTED_MODULE_11___default().func), (prop_types__WEBPACK_IMPORTED_MODULE_11___default().object), (prop_types__WEBPACK_IMPORTED_MODULE_11___default().bool)])), (prop_types__WEBPACK_IMPORTED_MODULE_11___default().func), (prop_types__WEBPACK_IMPORTED_MODULE_11___default().object)]),
+  /**
+   * Applies the theme typography styles.
+   * @default 'body1'
+   */
+  variant: prop_types__WEBPACK_IMPORTED_MODULE_11___default().oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_11___default().oneOf(['body1', 'body2', 'button', 'caption', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'inherit', 'overline', 'subtitle1', 'subtitle2']), (prop_types__WEBPACK_IMPORTED_MODULE_11___default().string)]),
+  /**
+   * The component maps the variant prop to a range of different HTML element types.
+   * For instance, subtitle1 to `<h6>`.
+   * If you wish to change that mapping, you can provide your own.
+   * Alternatively, you can use the `component` prop.
+   * @default {
+   *   h1: 'h1',
+   *   h2: 'h2',
+   *   h3: 'h3',
+   *   h4: 'h4',
+   *   h5: 'h5',
+   *   h6: 'h6',
+   *   subtitle1: 'h6',
+   *   subtitle2: 'h6',
+   *   body1: 'p',
+   *   body2: 'p',
+   *   inherit: 'p',
+   * }
+   */
+  variantMapping: (prop_types__WEBPACK_IMPORTED_MODULE_11___default().object)
+} : 0;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Typography);
+
+/***/ }),
+
+/***/ "./node_modules/@mui/material/esm/Typography/typographyClasses.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@mui/material/esm/Typography/typographyClasses.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "getTypographyUtilityClass": () => (/* binding */ getTypographyUtilityClass)
+/* harmony export */ });
+/* harmony import */ var _mui_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @mui/utils */ "./node_modules/@mui/utils/esm/generateUtilityClasses/generateUtilityClasses.js");
+/* harmony import */ var _generateUtilityClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../generateUtilityClass */ "./node_modules/@mui/utils/esm/generateUtilityClass/generateUtilityClass.js");
+
+
+function getTypographyUtilityClass(slot) {
+  return (0,_generateUtilityClass__WEBPACK_IMPORTED_MODULE_0__["default"])('MuiTypography', slot);
+}
+const typographyClasses = (0,_mui_utils__WEBPACK_IMPORTED_MODULE_1__["default"])('MuiTypography', ['root', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'subtitle1', 'subtitle2', 'body1', 'body2', 'inherit', 'button', 'caption', 'overline', 'alignLeft', 'alignRight', 'alignCenter', 'alignJustify', 'noWrap', 'gutterBottom', 'paragraph']);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (typographyClasses);
 
 /***/ }),
 
@@ -87561,11 +87930,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scale__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scale */ "./src/scale.js");
 /* harmony import */ var _tooltip__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tooltip */ "./src/tooltip.js");
 /* harmony import */ var _getData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./getData */ "./src/getData.js");
-/* harmony import */ var _mui_material_Box__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @mui/material/Box */ "./node_modules/@mui/material/esm/Box/Box.js");
-/* harmony import */ var _mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @mui/material/InputLabel */ "./node_modules/@mui/material/esm/InputLabel/InputLabel.js");
-/* harmony import */ var _mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @mui/material/MenuItem */ "./node_modules/@mui/material/esm/MenuItem/MenuItem.js");
-/* harmony import */ var _mui_material_FormControl__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @mui/material/FormControl */ "./node_modules/@mui/material/esm/FormControl/FormControl.js");
-/* harmony import */ var _mui_material_Select__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @mui/material/Select */ "./node_modules/@mui/material/esm/Select/Select.js");
+/* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/Box/Box.js");
+/* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/Typography/Typography.js");
+/* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/FormControl/FormControl.js");
+/* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/InputLabel/InputLabel.js");
+/* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/Select/Select.js");
+/* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/MenuItem/MenuItem.js");
 /* harmony import */ var _scatterplot__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./scatterplot */ "./src/scatterplot.js");
 /* harmony import */ var _legend__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./legend */ "./src/legend.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -87574,11 +87944,6 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-
-
 
 
 
@@ -87603,38 +87968,35 @@ function HeatMap() {
     _React$useState4 = _slicedToArray(_React$useState3, 2),
     variable = _React$useState4[0],
     setVariable = _React$useState4[1];
-  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_0__.useState(2020),
-    _React$useState6 = _slicedToArray(_React$useState5, 2),
-    endYear = _React$useState6[0],
-    setEndYear = _React$useState6[1];
+  var endYear = 2020;
 
   // tooltip
+  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
+    _React$useState6 = _slicedToArray(_React$useState5, 2),
+    selectedRegion = _React$useState6[0],
+    setSelectedRegion = _React$useState6[1];
   var _React$useState7 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState8 = _slicedToArray(_React$useState7, 2),
-    selectedRegion = _React$useState8[0],
-    setSelectedRegion = _React$useState8[1];
+    selectedYear = _React$useState8[0],
+    setSelectedYear = _React$useState8[1];
   var _React$useState9 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState10 = _slicedToArray(_React$useState9, 2),
-    selectedYear = _React$useState10[0],
-    setSelectedYear = _React$useState10[1];
+    tooltipLeft = _React$useState10[0],
+    setTooltipLeft = _React$useState10[1];
   var _React$useState11 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
     _React$useState12 = _slicedToArray(_React$useState11, 2),
-    tooltipLeft = _React$useState12[0],
-    setTooltipLeft = _React$useState12[1];
-  var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
-    _React$useState14 = _slicedToArray(_React$useState13, 2),
-    tooltipTop = _React$useState14[0],
-    setTooltipTop = _React$useState14[1];
+    tooltipTop = _React$useState12[0],
+    setTooltipTop = _React$useState12[1];
 
   // show line chart
-  var _React$useState15 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
+  var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
+    _React$useState14 = _slicedToArray(_React$useState13, 2),
+    show = _React$useState14[0],
+    setShow = _React$useState14[1];
+  var _React$useState15 = react__WEBPACK_IMPORTED_MODULE_0__.useState("Beijing"),
     _React$useState16 = _slicedToArray(_React$useState15, 2),
-    show = _React$useState16[0],
-    setShow = _React$useState16[1];
-  var _React$useState17 = react__WEBPACK_IMPORTED_MODULE_0__.useState("Beijing"),
-    _React$useState18 = _slicedToArray(_React$useState17, 2),
-    province = _React$useState18[0],
-    setProvince = _React$useState18[1];
+    province = _React$useState16[0],
+    setProvince = _React$useState16[1];
   var garbage = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetGarbage(GarbageUrl);
   var GDP = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetVariable(GDPUrl);
   var Population = _getData__WEBPACK_IMPORTED_MODULE_6__["default"].GetVariable(PopulationUrl);
@@ -87736,50 +88098,63 @@ function HeatMap() {
     setVariable(newVarible);
   };
   var colorlegend = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.colorSequential([0, 1], d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Box__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    sx: {
+      margin: "20px",
+      display: "flex",
+      flexDirection: "column"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    fontWeight: "bold",
+    fontSize: 30,
+    m: 1
+  }, "Investigation of Possible Factors that Influence the Regional Volume of Garbage Disposal in China"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    fontWeight: "bold",
+    m: 1
+  }, "Penghao Weng (pw1298), Yishan Chen (yc5046)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_10__["default"], null, "This visualization project shows the possible factors that might influence the Volume of Garbage Disposal in China's Provinces. You could change the range of years and possible factors by selecting the selection field below. The size of the cell indicates the relevant size of the chosen factor of each province in the year range. The saturation of the cell represents the relevant size of the Volume of Garbage Disposal of each province in the year range. On mouse over each cell, it would show the detailed number of each factor and a scatterplot chart.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_9__["default"], {
     sx: {
       margin: "1px",
       display: "flex",
       flexDirection: "row"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_10__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_11__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_11__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_12__["default"], {
     id: "demo-simple-select-label"
-  }, "Past Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, "Past Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_13__["default"], {
     labelId: "demo-simple-select-label",
     id: "demo-simple-select",
     value: startYear,
     label: "Year Range",
     onChange: handleSelect
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_14__["default"], {
     value: 2016
-  }, "Past 5 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
+  }, "Past 5 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_14__["default"], {
     value: 2011
-  }, "Past 10 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
+  }, "Past 10 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_14__["default"], {
     value: 2006
-  }, "Past 15 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
+  }, "Past 15 Years"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_14__["default"], {
     value: 2004
-  }, "Past 17 Years"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_FormControl__WEBPACK_IMPORTED_MODULE_10__["default"], {
+  }, "Past 17 Years"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_11__["default"], {
     sx: {
       minWidth: 150,
       ml: "15px"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_InputLabel__WEBPACK_IMPORTED_MODULE_11__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_12__["default"], {
     id: "demo-simple-select-label1"
-  }, "Possible Factors"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_Select__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, "Possible Factors"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_13__["default"], {
     labelId: "demo-simple-select-label1",
     id: "demo-simple-select1",
     value: variable,
     label: "Variable Select",
     onChange: handleVariable
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_14__["default"], {
     value: "GDP"
-  }, "GDP"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material_MenuItem__WEBPACK_IMPORTED_MODULE_13__["default"], {
+  }, "GDP"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_14__["default"], {
     value: "Population"
   }, "Population")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
     width: "100%",
     height: HEIGHT
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
-    transform: "translate(".concat(margin.left, ", ").concat(margin.top - 100, ")")
+    transform: "translate(".concat(margin.left, ", ").concat(margin.top - 50, ")")
   }, garbage.map(function (d, index) {
     return Object.keys(d).map(function (element) {
       if (YEAR.includes(element)) {
@@ -87819,15 +88194,15 @@ function HeatMap() {
       x: -50,
       y: yScale(m) + 3
     }, m);
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_legend__WEBPACK_IMPORTED_MODULE_8__.Legend, {
+  }), "/* Legend", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_legend__WEBPACK_IMPORTED_MODULE_8__.Legend, {
     x: width + 40,
-    y: -100,
+    y: -150,
     width: 250,
     height: 20,
     colormap: colorlegend
   }), show ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_scatterplot__WEBPACK_IMPORTED_MODULE_7__.ScatterPlot, {
-    offsetX: margin.left + 720,
-    offsetY: tooltipTop < 1300 ? tooltipTop + 100 : 1300,
+    offsetX: width < 700 ? width + 220 : 930,
+    offsetY: tooltipTop < 1300 ? tooltipTop - 130 : 1300,
     ChartData: garbage,
     province: province,
     height: 280,
@@ -87836,8 +88211,8 @@ function HeatMap() {
     selectedYear: selectedYear,
     type: "Garbage"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_scatterplot__WEBPACK_IMPORTED_MODULE_7__.ScatterPlot, {
-    offsetX: margin.left + 720,
-    offsetY: tooltipTop < 1300 ? tooltipTop - 230 : 950,
+    offsetX: width < 700 ? width + 220 : 930,
+    offsetY: tooltipTop < 1300 ? tooltipTop - 460 : 950,
     ChartData: variable === "GDP" ? GDP : variable === "Population" ? Population : garbage,
     province: province,
     height: 280,

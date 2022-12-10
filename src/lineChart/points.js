@@ -5,16 +5,16 @@ export function Points(props) {
 
   const getColor = (selectedYear, year) => {
     if (year === selectedYear) {
-      return "red";
+      return "lightblue";
     } else {
-      return "steelblue";
+      return "orange";
     }
   };
   const getRadius = (selectedYear, year) => {
     if (year === selectedYear) {
       return 10;
     } else {
-      return 5;
+      return 3;
     }
   };
 

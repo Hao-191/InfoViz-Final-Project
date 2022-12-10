@@ -1,18 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Cell } from "./cell";
-import { min, max, interpolateYlOrBr, map } from "d3";
+import { Cell } from "./heatMap/cell";
+import { min, max, interpolateYlOrBr } from "d3";
 import { Scales } from "./scale";
-import { Tooltip } from "./tooltip";
+import { Tooltip } from "./heatMap/tooltip";
 import GetData from "./getData";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { csv } from "d3";
-import { ScatterPlot } from "./scatterplot";
-import { Legend } from "./legend";
+import {
+  Typography,
+  Box,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@mui/material";
+import { ScatterPlot } from "./lineChart/scatterplot";
+import { Legend } from "./heatMap/legend";
 
 const GDPUrl =
   "https://gist.githubusercontent.com/Hao-191/1b05871531ce71a82d36be51bde6c11b/raw/2118f515ad09e3430da298e5d3575c404e36eb0a/GDPbyProvince.csv";
@@ -28,7 +30,7 @@ function HeatMap() {
   // Control Year Status
   const [startYear, setStartYear] = React.useState(2011);
   const [variable, setVariable] = React.useState("GDP");
-  const [endYear, setEndYear] = React.useState(2020);
+  const endYear = 2020;
 
   // tooltip
   const [selectedRegion, setSelectedRegion] = React.useState(null);
@@ -158,10 +160,30 @@ function HeatMap() {
     setVariable(newVarible);
   };
 
-  const colorlegend = Scales.colorSequential([0,1], interpolateYlOrBr);
+  const colorlegend = Scales.colorSequential([0, 1], interpolateYlOrBr);
 
   return (
     <React.Fragment>
+      <Box sx={{ margin: "20px", display: "flex", flexDirection: "column" }}>
+        <Typography fontWeight="bold" fontSize={30} m={1}>
+          Investigation of Possible Factors that Influence the Regional Volume
+          of Garbage Disposal in China
+        </Typography>
+        <Typography fontWeight="bold" m={1}>
+          Penghao Weng (pw1298), Yishan Chen (yc5046)
+        </Typography>
+        <Typography>
+          This visualization project shows the possible factors that might
+          influence the Volume of Garbage Disposal in China's Provinces. You
+          could change the range of years and possible factors by selecting the
+          selection field below. The size of the cell indicates the relevant
+          size of the chosen factor of each province in the year range. The
+          saturation of the cell represents the relevant size of the Volume of
+          Garbage Disposal of each province in the year range. On mouse over
+          each cell, it would show the detailed number of each factor with its
+          scatterplot chart and a line chart of Volume of Garbage.
+        </Typography>
+      </Box>
       {/* Past years selector */}
       <Box sx={{ margin: "1px", display: "flex", flexDirection: "row" }}>
         <FormControl>
@@ -227,7 +249,6 @@ function HeatMap() {
               }
             });
           })}
-
           {YEAR.map((s) => {
             return (
               <g key={s} transform={`translate(${xScale(s)},-40)rotate(60)`}>
@@ -235,7 +256,6 @@ function HeatMap() {
               </g>
             );
           })}
-
           {PROVINCE.map((m) => {
             return (
               <text
@@ -248,16 +268,20 @@ function HeatMap() {
               </text>
             );
           })}
-
           /* Legend
-          <Legend x={width+40} y={-150} width={250} height={20} colormap={colorlegend}/>
-
+          <Legend
+            x={width + 40}
+            y={-150}
+            width={250}
+            height={20}
+            colormap={colorlegend}
+          />
           {/* Garbage Line Chart */}
           {show ? (
             <React.Fragment>
               <ScatterPlot
-                offsetX={width + 100}
-                offsetY={tooltipTop < 1300 ? tooltipTop + 100 : 1300}
+                offsetX={width < 700 ? width + 220 : 930}
+                offsetY={tooltipTop < 1300 ? tooltipTop - 130 : 1300}
                 ChartData={garbage}
                 province={province}
                 height={280}
@@ -267,8 +291,8 @@ function HeatMap() {
                 type="Garbage"
               />
               <ScatterPlot
-                offsetX={width + 100}
-                offsetY={tooltipTop < 1300 ? tooltipTop - 230 : 950}
+                offsetX={width < 700 ? width + 220 : 930}
+                offsetY={tooltipTop < 1300 ? tooltipTop - 460 : 950}
                 ChartData={
                   variable === "GDP"
                     ? GDP

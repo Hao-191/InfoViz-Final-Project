@@ -1,10 +1,12 @@
+
 import React from "react";
 
 export { XAxis, YAxis };
 
 function XAxis (props) {
     const {chartType, xScale, height, width, axisLabel,} = props;
-    //console.log('xScale', xScale)
+
+
     if (chartType === "scatter") {
         return <g>
             {<line x1={0} y1={height} x2={width} y2={height} stroke='black'/>}
