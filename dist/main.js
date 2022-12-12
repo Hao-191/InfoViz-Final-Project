@@ -1,10 +1,334 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/axes.js":
-/*!*********************!*\
-  !*** ./src/axes.js ***!
-  \*********************/
+/***/ "./src/getData.js":
+/*!************************!*\
+  !*** ./src/getData.js ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var GetVariable = function GetVariable(url) {
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    dataAll = _React$useState2[0],
+    setData = _React$useState2[1];
+  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
+    (0,d3__WEBPACK_IMPORTED_MODULE_1__.csv)(url).then(function (data) {
+      data.forEach(function (d) {
+        Object.keys(d).forEach(function (k) {
+          Number(k) >= 2002 && Number(k) <= 2021 ? d[k] = +d[k] : d[k] = d[k];
+        });
+      });
+      setData(data);
+    });
+  }, []);
+  return dataAll;
+};
+var GetGarbage = function GetGarbage(url) {
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
+    _React$useState4 = _slicedToArray(_React$useState3, 2),
+    dataAll = _React$useState4[0],
+    setData = _React$useState4[1];
+  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
+    (0,d3__WEBPACK_IMPORTED_MODULE_1__.csv)(url).then(function (data) {
+      data.forEach(function (d) {
+        Object.keys(d).forEach(function (k) {
+          Number(k) >= 2002 && Number(k) <= 2021 ? d[k] = +d[k] : d[k] = d[k];
+        });
+      });
+      setData(data);
+    });
+  }, []);
+  return dataAll;
+};
+var GetData = {
+  GetGarbage: GetGarbage,
+  GetVariable: GetVariable
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GetData);
+
+/***/ }),
+
+/***/ "./src/heatMap/cell.js":
+/*!*****************************!*\
+  !*** ./src/heatMap/cell.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Cell": () => (/* binding */ Cell)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+function Cell(props) {
+  var dYear = props.dYear,
+    dRegion = props.dRegion,
+    xScale = props.xScale,
+    yScale = props.yScale,
+    size = props.size,
+    color = props.color,
+    setSelectedRegion = props.setSelectedRegion,
+    setSelectedYear = props.setSelectedYear,
+    setTooltipLeft = props.setTooltipLeft,
+    setTooltipTop = props.setTooltipTop,
+    setShow = props.setShow,
+    setProvince = props.setProvince;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
+    transform: "translate(".concat(xScale(dYear) - size / 2, ", ").concat(yScale(dRegion) - size / 2, ")")
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
+    width: size,
+    height: size,
+    fill: color,
+    stroke: "black",
+    onMouseEnter: function onMouseEnter(e) {
+      setSelectedRegion(dRegion);
+      setSelectedYear(dYear);
+      setTooltipLeft(e.pageX);
+      setTooltipTop(e.pageY);
+      setShow(true);
+      setProvince(dRegion);
+    },
+    onMouseOut: function onMouseOut() {
+      setSelectedRegion(null);
+      setSelectedYear(null);
+      setTooltipLeft(null);
+      setTooltipTop(null);
+      setShow(false);
+    }
+  }));
+}
+
+/***/ }),
+
+/***/ "./src/heatMap/legend.js":
+/*!*******************************!*\
+  !*** ./src/heatMap/legend.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Legend": () => (/* binding */ Legend)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
+
+
+function Legend(props) {
+  var x = props.x,
+    y = props.y,
+    width = props.width,
+    height = props.height,
+    colormap = props.colormap;
+  var xScale = (0,d3__WEBPACK_IMPORTED_MODULE_1__.scaleLinear)().range([x, x + width]).domain([0, 1]).nice();
+  var ticks = xScale.ticks(4);
+  var text = ["Low Vol of Garbage", " ", " ", " ", " ", "High Vol of Garbage"];
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("defs", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("linearGradient", {
+    id: "gradient",
+    x1: "0%",
+    y1: "0%",
+    x2: "100%",
+    y2: "0%"
+  }, ticks.map(function (tick) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("stop", {
+      key: "".concat(tick, "stop"),
+      offset: "".concat(100 * tick, "%"),
+      stopColor: colormap(tick)
+    });
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
+    x: x,
+    y: y,
+    width: width,
+    height: height,
+    style: {
+      fill: "url(#gradient)"
+    }
+  }), ticks.map(function (tick) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
+      key: tick,
+      transform: "translate(".concat(xScale(tick), ", ").concat(y, ")")
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("line", {
+      y2: height,
+      stroke: 'black'
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
+      style: {
+        textAnchor: 'middle'
+      },
+      y: height + 15
+    }, text.shift()));
+  }));
+}
+
+/***/ }),
+
+/***/ "./src/heatMap/tooltip.js":
+/*!********************************!*\
+  !*** ./src/heatMap/tooltip.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Tooltip": () => (/* binding */ Tooltip)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+function Tooltip(props) {
+  var garbageData = props.garbageData,
+    factorData = props.factorData,
+    left = props.left,
+    top = props.top,
+    year = props.year,
+    variable = props.variable;
+  if (left === null) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null);
+  } else {
+    var divStyle = {
+      position: "absolute",
+      textAlign: "left",
+      width: "300px",
+      height: "130px",
+      padding: "2px",
+      font: "13px sans-serif",
+      background: "lightblue",
+      opacity: 0.9,
+      border: "0px",
+      borderRadius: "8px",
+      pointerEvents: "none",
+      left: "".concat(left - 100, "px"),
+      top: "".concat(top, "px")
+    };
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      style: divStyle
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, garbageData.Region), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Year ", year), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Volume of Garbage: ", garbageData["".concat(year)], " (10000 tons)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, variable, ": ", factorData["".concat(year)], " ", variable === "GDP" ? "(100 million yuan)" : variable === "Population" ? "(10000 persons)" : "")));
+  }
+}
+
+/***/ }),
+
+/***/ "./src/lineChart/Line.js":
+/*!*******************************!*\
+  !*** ./src/lineChart/Line.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var d3_selection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! d3-selection */ "./node_modules/d3-selection/src/select.js");
+/* harmony import */ var d3_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3-selection */ "./node_modules/d3-selection/src/selectAll.js");
+/* harmony import */ var d3_transition__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3-transition */ "./node_modules/d3-transition/src/index.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var Line = /*#__PURE__*/function (_React$Component) {
+  _inherits(Line, _React$Component);
+  var _super = _createSuper(Line);
+  function Line() {
+    var _this;
+    _classCallCheck(this, Line);
+    _this = _super.call(this);
+    _this.ref = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createRef();
+    return _this;
+  }
+  _createClass(Line, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var node = this.ref.current;
+      var _this$props = this.props,
+        xScale = _this$props.xScale,
+        yScale = _this$props.yScale,
+        data = _this$props.data,
+        lineGenerator = _this$props.lineGenerator;
+      var initialData = data.map(function (d) {
+        return {
+          year: d.year,
+          value: 0
+        };
+      });
+      (0,d3_selection__WEBPACK_IMPORTED_MODULE_2__["default"])(node).append('path').datum(initialData).attr('id', 'line').attr('stroke', 'black').attr('stroke-width', 2).attr('fill', 'none').attr('d', lineGenerator);
+      (0,d3_selection__WEBPACK_IMPORTED_MODULE_2__["default"])(node).selectAll('circle').data(data).enter().append('circle').attr('class', 'circle').attr('stroke', '#ECC417').attr('stroke-width', '2').attr('fill', '#333').attr('r', 3).attr('cx', function (d, key) {
+        return xScale(key);
+      }).attr('cy', function (d) {
+        return yScale(d.value);
+      });
+      this.updateChart();
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      this.updateChart();
+    }
+  }, {
+    key: "updateChart",
+    value: function updateChart() {
+      var _this$props2 = this.props,
+        lineGenerator = _this$props2.lineGenerator,
+        xScale = _this$props2.xScale,
+        yScale = _this$props2.yScale,
+        data = _this$props2.data;
+      var t = (0,d3_transition__WEBPACK_IMPORTED_MODULE_1__.transition)().duration(500);
+      var line = (0,d3_selection__WEBPACK_IMPORTED_MODULE_2__["default"])('#line');
+      var dot = (0,d3_selection__WEBPACK_IMPORTED_MODULE_3__["default"])('.circle');
+      line.datum(data).transition(t).attr('d', lineGenerator);
+      dot.data(data).transition(t).attr('cx', function (d, key) {
+        return xScale(key);
+      }).attr('cy', function (d) {
+        return yScale(d.value);
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
+        className: "line-group",
+        ref: this.ref
+      });
+    }
+  }]);
+  return Line;
+}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Line);
+
+/***/ }),
+
+/***/ "./src/lineChart/axes.js":
+/*!*******************************!*\
+  !*** ./src/lineChart/axes.js ***!
+  \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -83,298 +407,10 @@ function YAxis(props) {
 
 /***/ }),
 
-/***/ "./src/cell.js":
-/*!*********************!*\
-  !*** ./src/cell.js ***!
-  \*********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Cell": () => (/* binding */ Cell)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-function Cell(props) {
-  var dYear = props.dYear,
-    dRegion = props.dRegion,
-    xScale = props.xScale,
-    yScale = props.yScale,
-    size = props.size,
-    color = props.color,
-    setSelectedRegion = props.setSelectedRegion,
-    setSelectedYear = props.setSelectedYear,
-    setTooltipLeft = props.setTooltipLeft,
-    setTooltipTop = props.setTooltipTop,
-    setShow = props.setShow,
-    setProvince = props.setProvince;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
-    transform: "translate(".concat(xScale(dYear) - size / 2, ", ").concat(yScale(dRegion) - size / 2, ")")
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
-    width: size,
-    height: size,
-    fill: color,
-    stroke: "black",
-    onMouseEnter: function onMouseEnter(e) {
-      setSelectedRegion(dRegion);
-      setSelectedYear(dYear);
-      setTooltipLeft(e.pageX);
-      setTooltipTop(e.pageY);
-      setShow(true);
-      setProvince(dRegion);
-    },
-    onMouseOut: function onMouseOut() {
-      setSelectedRegion(null);
-      setSelectedYear(null);
-      setTooltipLeft(null);
-      setTooltipTop(null);
-      setShow(false);
-    }
-  }));
-}
-
-/***/ }),
-
-/***/ "./src/components/line.js":
-/*!********************************!*\
-  !*** ./src/components/line.js ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var d3_selection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! d3-selection */ "./node_modules/d3-selection/src/select.js");
-/* harmony import */ var d3_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3-selection */ "./node_modules/d3-selection/src/selectAll.js");
-/* harmony import */ var d3_transition__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3-transition */ "./node_modules/d3-transition/src/index.js");
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var Line = /*#__PURE__*/function (_React$Component) {
-  _inherits(Line, _React$Component);
-  var _super = _createSuper(Line);
-  function Line() {
-    var _this;
-    _classCallCheck(this, Line);
-    _this = _super.call(this);
-    _this.ref = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createRef();
-    return _this;
-  }
-  _createClass(Line, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var node = this.ref.current;
-      var _this$props = this.props,
-        xScale = _this$props.xScale,
-        yScale = _this$props.yScale,
-        data = _this$props.data,
-        lineGenerator = _this$props.lineGenerator;
-      var initialData = data.map(function (d) {
-        return {
-          name: d.name,
-          value: 0
-        };
-      });
-      (0,d3_selection__WEBPACK_IMPORTED_MODULE_2__["default"])(node).append('path').datum(initialData).attr('id', 'line').attr('stroke', 'black').attr('stroke-width', 2).attr('fill', 'none').attr('d', lineGenerator);
-
-      // select(node)
-      //   .selectAll('circle')
-      //   .data(data)
-      //   .enter()
-      //   .append('circle')
-      //   .attr('class', 'circle')
-      //   .attr('stroke', '#ECC417')
-      //   .attr('stroke-width', '2')
-      //   .attr('fill', '#333')
-      //   .attr('r', 3)
-      //   .attr('cx', (d, key) => xScale(key))
-      //   .attr('cy', d => yScale(d.count));
-
-      this.updateChart();
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      this.updateChart();
-    }
-  }, {
-    key: "updateChart",
-    value: function updateChart() {
-      var _this$props2 = this.props,
-        lineGenerator = _this$props2.lineGenerator,
-        xScale = _this$props2.xScale,
-        yScale = _this$props2.yScale,
-        data = _this$props2.data;
-      var t = (0,d3_transition__WEBPACK_IMPORTED_MODULE_1__.transition)().duration(1000);
-      var line = (0,d3_selection__WEBPACK_IMPORTED_MODULE_2__["default"])('#line');
-      var dot = (0,d3_selection__WEBPACK_IMPORTED_MODULE_3__["default"])('.circle');
-      line.datum(data).transition(t).attr('d', lineGenerator);
-
-      // dot
-      //   .data(data)
-      //   .transition(t)
-      //   .attr('cx', (d, key) => xScale(key))
-      //   .attr('cy', d => yScale(d.count));
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
-        className: "line-group",
-        ref: this.ref
-      });
-    }
-  }]);
-  return Line;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Line);
-
-/***/ }),
-
-/***/ "./src/getData.js":
-/*!************************!*\
-  !*** ./src/getData.js ***!
-  \************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-var GetVariable = function GetVariable(url) {
-  var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
-    _React$useState2 = _slicedToArray(_React$useState, 2),
-    dataAll = _React$useState2[0],
-    setData = _React$useState2[1];
-  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
-    (0,d3__WEBPACK_IMPORTED_MODULE_1__.csv)(url).then(function (data) {
-      data.forEach(function (d) {
-        Object.keys(d).forEach(function (k) {
-          Number(k) >= 2002 && Number(k) <= 2021 ? d[k] = +d[k] : d[k] = d[k];
-        });
-      });
-      setData(data);
-    });
-  }, []);
-  return dataAll;
-};
-var GetGarbage = function GetGarbage(url) {
-  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState(null),
-    _React$useState4 = _slicedToArray(_React$useState3, 2),
-    dataAll = _React$useState4[0],
-    setData = _React$useState4[1];
-  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
-    (0,d3__WEBPACK_IMPORTED_MODULE_1__.csv)(url).then(function (data) {
-      data.forEach(function (d) {
-        Object.keys(d).forEach(function (k) {
-          Number(k) >= 2002 && Number(k) <= 2021 ? d[k] = +d[k] : d[k] = d[k];
-        });
-      });
-      setData(data);
-    });
-  }, []);
-  return dataAll;
-};
-var GetData = {
-  GetGarbage: GetGarbage,
-  GetVariable: GetVariable
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GetData);
-
-/***/ }),
-
-/***/ "./src/legend.js":
-/*!***********************!*\
-  !*** ./src/legend.js ***!
-  \***********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Legend": () => (/* binding */ Legend)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
-
-
-function Legend(props) {
-  var x = props.x,
-    y = props.y,
-    width = props.width,
-    height = props.height,
-    colormap = props.colormap;
-  var xScale = (0,d3__WEBPACK_IMPORTED_MODULE_1__.scaleLinear)().range([x, x + width]).domain([0, 1]).nice();
-  var ticks = xScale.ticks(4);
-  var text = ["Low Vol of Garbage", " ", " ", " ", " ", "High Vol of Garbage"];
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("defs", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("linearGradient", {
-    id: "gradient",
-    x1: "0%",
-    y1: "0%",
-    x2: "100%",
-    y2: "0%"
-  }, ticks.map(function (tick) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("stop", {
-      key: "".concat(tick, "stop"),
-      offset: "".concat(100 * tick, "%"),
-      stopColor: colormap(tick)
-    });
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
-    x: x,
-    y: y,
-    width: width,
-    height: height,
-    style: {
-      fill: "url(#gradient)"
-    }
-  }), ticks.map(function (tick) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
-      key: tick,
-      transform: "translate(".concat(xScale(tick), ", ").concat(y, ")")
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("line", {
-      y2: height,
-      stroke: 'black'
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("text", {
-      style: {
-        textAnchor: 'middle'
-      },
-      y: height + 15
-    }, text.shift()));
-  }));
-}
-
-/***/ }),
-
-/***/ "./src/points.js":
-/*!***********************!*\
-  !*** ./src/points.js ***!
-  \***********************/
+/***/ "./src/lineChart/points.js":
+/*!*********************************!*\
+  !*** ./src/lineChart/points.js ***!
+  \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -441,46 +477,10 @@ function Points(props) {
 
 /***/ }),
 
-/***/ "./src/scale.js":
-/*!**********************!*\
-  !*** ./src/scale.js ***!
-  \**********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Scales": () => (/* binding */ Scales)
-/* harmony export */ });
-/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
-
-var Scales = {
-  linear: function linear(min_value, max_value, start_pos, end_pos) {
-    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleLinear)().range([start_pos, end_pos]).domain([min_value, max_value]).nice();
-  },
-  band: function band(discreteValue, start_pos, end_pos) {
-    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleBand)().range([start_pos, end_pos]).domain(discreteValue);
-  },
-  colormapLiner: function colormapLiner(domainArry, rangeArrage) {
-    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleLinear)().domain(domainArry).range(rangeArrage);
-  },
-  colorSequential: function colorSequential(domainArry, colorScheme) {
-    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleSequential)(colorScheme).domain(domainArry);
-  },
-  colorDiverging: function colorDiverging(domainArry, colorScheme) {
-    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleDiverging)(colorScheme).domain(domainArry);
-  },
-  ordinal: function ordinal(width, year) {
-    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleOrdinal)().rangeRoundBands([0, width]).domain(year);
-  }
-};
-
-/***/ }),
-
-/***/ "./src/scatterplot.js":
-/*!****************************!*\
-  !*** ./src/scatterplot.js ***!
-  \****************************/
+/***/ "./src/lineChart/scatterplot.js":
+/*!**************************************!*\
+  !*** ./src/lineChart/scatterplot.js ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -490,11 +490,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
-/* harmony import */ var _scale__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scale */ "./src/scale.js");
-/* harmony import */ var _points__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./points */ "./src/points.js");
-/* harmony import */ var _axes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./axes */ "./src/axes.js");
-/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/curve/monotone.js");
-/* harmony import */ var _components_line__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/line */ "./src/components/line.js");
+/* harmony import */ var _scale__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../scale */ "./src/scale.js");
+/* harmony import */ var _points__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./points */ "./src/lineChart/points.js");
+/* harmony import */ var _axes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./axes */ "./src/lineChart/axes.js");
+/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/line.js");
+/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/curve/monotone.js");
+/* harmony import */ var _Line__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Line */ "./src/lineChart/Line.js");
 
 
 
@@ -530,12 +531,12 @@ function ScatterPlot(props) {
   }) - 20, (0,d3__WEBPACK_IMPORTED_MODULE_1__.max)(lineChart, function (d) {
     return d.value;
   }), height, 0);
-  var lineGenerator = line().x(function (d) {
+  var lineGenerator = d3_shape__WEBPACK_IMPORTED_MODULE_6__["default"]().x(function (d) {
     return xScale(d.year);
   }).y(function (d) {
     return yScale(d.value);
-  }).curve(d3_shape__WEBPACK_IMPORTED_MODULE_6__.monotoneX);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
+  }).curve(d3_shape__WEBPACK_IMPORTED_MODULE_7__.monotoneX);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("g", {
     transform: "translate(".concat(offsetX, ", ").concat(offsetY, ")")
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_points__WEBPACK_IMPORTED_MODULE_3__.Points, {
     lineChart: lineChart,
@@ -552,61 +553,61 @@ function ScatterPlot(props) {
     height: height,
     width: width,
     axisLabel: "Year"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_line__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }), type === "Garbage" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Line__WEBPACK_IMPORTED_MODULE_5__["default"], {
     data: lineChart,
     xScale: xScale,
     yScale: yScale,
     lineGenerator: lineGenerator,
-    width: width,
-    height: height
-  }));
+    height: height,
+    width: width
+  }) : type === "GDP" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    d: lineGenerator(lineChart),
+    stroke: "black",
+    strokeWidth: 3,
+    fill: "none"
+  }) : type === "Population" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    d: lineGenerator(lineChart),
+    stroke: "black",
+    strokeWidth: 3,
+    fill: "none"
+  }) : null));
 }
 
 /***/ }),
 
-/***/ "./src/tooltip.js":
-/*!************************!*\
-  !*** ./src/tooltip.js ***!
-  \************************/
+/***/ "./src/scale.js":
+/*!**********************!*\
+  !*** ./src/scale.js ***!
+  \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Tooltip": () => (/* binding */ Tooltip)
+/* harmony export */   "Scales": () => (/* binding */ Scales)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
 
-function Tooltip(props) {
-  var garbageData = props.garbageData,
-    factorData = props.factorData,
-    left = props.left,
-    top = props.top,
-    year = props.year,
-    variable = props.variable;
-  if (left === null) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null);
-  } else {
-    var divStyle = {
-      position: "absolute",
-      textAlign: "left",
-      width: "300px",
-      height: "130px",
-      padding: "2px",
-      font: "13px sans-serif",
-      background: "lightblue",
-      opacity: 0.9,
-      border: "0px",
-      borderRadius: "8px",
-      pointerEvents: "none",
-      left: "".concat(left - 100, "px"),
-      top: "".concat(top, "px")
-    };
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-      style: divStyle
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, garbageData.Region), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Year ", year), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Volume of Garbage: ", garbageData["".concat(year)], " (10000 tons)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, variable, ": ", factorData["".concat(year)], " ", variable === "GDP" ? "(100 million yuan)" : variable === "Population" ? "(10000 persons)" : "")));
+var Scales = {
+  linear: function linear(min_value, max_value, start_pos, end_pos) {
+    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleLinear)().range([start_pos, end_pos]).domain([min_value, max_value]).nice();
+  },
+  band: function band(discreteValue, start_pos, end_pos) {
+    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleBand)().range([start_pos, end_pos]).domain(discreteValue);
+  },
+  colormapLiner: function colormapLiner(domainArry, rangeArrage) {
+    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleLinear)().domain(domainArry).range(rangeArrage);
+  },
+  colorSequential: function colorSequential(domainArry, colorScheme) {
+    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleSequential)(colorScheme).domain(domainArry);
+  },
+  colorDiverging: function colorDiverging(domainArry, colorScheme) {
+    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleDiverging)(colorScheme).domain(domainArry);
+  },
+  ordinal: function ordinal(width, year) {
+    return (0,d3__WEBPACK_IMPORTED_MODULE_0__.scaleOrdinal)().rangeRoundBands([0, width]).domain(year);
   }
-}
+};
 
 /***/ }),
 
@@ -87925,10 +87926,10 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var _cell__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./cell */ "./src/cell.js");
+/* harmony import */ var _heatMap_cell__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./heatMap/cell */ "./src/heatMap/cell.js");
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
 /* harmony import */ var _scale__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scale */ "./src/scale.js");
-/* harmony import */ var _tooltip__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tooltip */ "./src/tooltip.js");
+/* harmony import */ var _heatMap_tooltip__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./heatMap/tooltip */ "./src/heatMap/tooltip.js");
 /* harmony import */ var _getData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./getData */ "./src/getData.js");
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/Box/Box.js");
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/Typography/Typography.js");
@@ -87936,8 +87937,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/InputLabel/InputLabel.js");
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/Select/Select.js");
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @mui/material */ "./node_modules/@mui/material/esm/MenuItem/MenuItem.js");
-/* harmony import */ var _scatterplot__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./scatterplot */ "./src/scatterplot.js");
-/* harmony import */ var _legend__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./legend */ "./src/legend.js");
+/* harmony import */ var _lineChart_scatterplot__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./lineChart/scatterplot */ "./src/lineChart/scatterplot.js");
+/* harmony import */ var _heatMap_legend__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./heatMap/legend */ "./src/heatMap/legend.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -88111,7 +88112,7 @@ function HeatMap() {
   }, "Investigation of Possible Factors that Influence the Regional Volume of Garbage Disposal in China"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_10__["default"], {
     fontWeight: "bold",
     m: 1
-  }, "Penghao Weng (pw1298), Yishan Chen (yc5046)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_10__["default"], null, "This visualization project shows the possible factors that might influence the Volume of Garbage Disposal in China's Provinces. You could change the range of years and possible factors by selecting the selection field below. The size of the cell indicates the relevant size of the chosen factor of each province in the year range. The saturation of the cell represents the relevant size of the Volume of Garbage Disposal of each province in the year range. On mouse over each cell, it would show the detailed number of each factor and a scatterplot chart.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  }, "Penghao Weng (pw1298), Yishan Chen (yc5046)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_10__["default"], null, "This visualization project shows the possible factors that might influence the Volume of Garbage Disposal in China's Provinces. You could change the range of years and possible factors by selecting the selection field below. The size of the cell indicates the relevant size of the chosen factor of each province in the year range. The saturation of the cell represents the relevant size of the Volume of Garbage Disposal of each province in the year range. On mouse over each cell, it would show the detailed number of each factor with its scatterplot chart and a line chart of Volume of Garbage.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mui_material__WEBPACK_IMPORTED_MODULE_9__["default"], {
     sx: {
       margin: "1px",
       display: "flex",
@@ -88159,7 +88160,7 @@ function HeatMap() {
     return Object.keys(d).map(function (element) {
       if (YEAR.includes(element)) {
         var colormap = _scale__WEBPACK_IMPORTED_MODULE_4__.Scales.colorSequential(saturationRange[index], d3__WEBPACK_IMPORTED_MODULE_3__.interpolateYlOrBr);
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_cell__WEBPACK_IMPORTED_MODULE_2__.Cell, {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_heatMap_cell__WEBPACK_IMPORTED_MODULE_2__.Cell, {
           key: element + d.Region,
           dYear: element,
           dRegion: d.Region,
@@ -88194,13 +88195,13 @@ function HeatMap() {
       x: -50,
       y: yScale(m) + 3
     }, m);
-  }), "/* Legend", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_legend__WEBPACK_IMPORTED_MODULE_8__.Legend, {
+  }), "/* Legend", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_heatMap_legend__WEBPACK_IMPORTED_MODULE_8__.Legend, {
     x: width + 40,
     y: -150,
     width: 250,
     height: 20,
     colormap: colorlegend
-  }), show ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_scatterplot__WEBPACK_IMPORTED_MODULE_7__.ScatterPlot, {
+  }), show ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_lineChart_scatterplot__WEBPACK_IMPORTED_MODULE_7__.ScatterPlot, {
     offsetX: width < 700 ? width + 220 : 930,
     offsetY: tooltipTop < 1300 ? tooltipTop - 130 : 1300,
     ChartData: garbage,
@@ -88210,7 +88211,7 @@ function HeatMap() {
     startYear: startYear,
     selectedYear: selectedYear,
     type: "Garbage"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_scatterplot__WEBPACK_IMPORTED_MODULE_7__.ScatterPlot, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_lineChart_scatterplot__WEBPACK_IMPORTED_MODULE_7__.ScatterPlot, {
     offsetX: width < 700 ? width + 220 : 930,
     offsetY: tooltipTop < 1300 ? tooltipTop - 460 : 950,
     ChartData: variable === "GDP" ? GDP : variable === "Population" ? Population : garbage,
@@ -88220,7 +88221,7 @@ function HeatMap() {
     startYear: startYear,
     selectedYear: selectedYear,
     type: variable === "GDP" ? "GDP" : variable === "Population" ? "Population" : "Garbage"
-  })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_tooltip__WEBPACK_IMPORTED_MODULE_5__.Tooltip, {
+  })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_heatMap_tooltip__WEBPACK_IMPORTED_MODULE_5__.Tooltip, {
     garbageData: dTooltipGarbage,
     factorData: dTooltipFactor,
     left: tooltipLeft < 800 ? tooltipLeft : 800,

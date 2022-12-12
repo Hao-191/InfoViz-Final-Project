@@ -166,7 +166,7 @@ function HeatMap() {
     <React.Fragment>
       <Box sx={{ margin: "20px", display: "flex", flexDirection: "column" }}>
         <Typography fontWeight="bold" fontSize={30} m={1}>
-          Investigation of Possible Factors that Influence the Regional Volume
+          Relationship of Possible Factors and the Regional Volume
           of Garbage Disposal in China
         </Typography>
         <Typography fontWeight="bold" m={1}>
@@ -180,8 +180,7 @@ function HeatMap() {
           size of the chosen factor of each province in the year range. The
           saturation of the cell represents the relevant size of the Volume of
           Garbage Disposal of each province in the year range. On mouse over
-          each cell, it would show the detailed number of each factor with its
-          scatterplot chart and a line chart of Volume of Garbage.
+          each cell, two line charts would show trends of factors.
         </Typography>
       </Box>
       {/* Past years selector */}

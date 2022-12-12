@@ -4,7 +4,6 @@ import { Scales } from "../scale";
 import { Points } from "./points";
 import { XAxis, YAxis } from "./axes";
 import * as d3shape from "d3-shape";
-import Line from "./Line";
 
 export function ScatterPlot(props) {
   const {
@@ -53,6 +52,14 @@ export function ScatterPlot(props) {
   return (
     <React.Fragment>
       <g transform={`translate(${offsetX}, ${offsetY})`}>
+        <path
+          d={lineGenerator(lineChart)}
+          stroke={"black"}
+          strokeWidth={2}
+          fill={"none"}
+          opacity={0.7}
+        />
+
         <Points
           lineChart={lineChart}
           xScale={xScale}
@@ -81,27 +88,7 @@ export function ScatterPlot(props) {
           width={width}
           axisLabel={"Year"}
         />
-              {type === "Garbage" ? (
-        <Line
-          data={lineChart}
-          xScale={xScale}
-          yScale={yScale}
-          lineGenerator={lineGenerator}          height={height}
-          width={width}
-        />
-      ) 
-      : 
-      type === "GDP" ? (
-      <path d={lineGenerator(lineChart)} stroke={"black"} strokeWidth={3} fill={"none"} />
-      )
-      :
-      type === "Population" ?(
-      <path d={lineGenerator(lineChart)} stroke={"black"} strokeWidth={3} fill={"none"} />
-      )
-      :
-      null}
       </g>
-
     </React.Fragment>
   );
 }
