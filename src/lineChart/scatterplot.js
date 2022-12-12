@@ -90,28 +90,14 @@ export function ScatterPlot(props) {
           width={width}
         />
       ) 
-      // : 
-      // type === "GDP" ? (
-      //   <Line
-      //     data={lineChart}
-      //     xScale={xScale}
-      //     yScale={yScale}
-      //     lineGenerator={lineGenerator}
-      //     height={height}
-      //     width={width}
-      //   />
-      // )
-      // :
-      // type === "Population" ?(
-      //   <Line
-      //     data={lineChart}
-      //     xScale={xScale}
-      //     yScale={yScale}
-      //     lineGenerator={lineGenerator}
-      //     height={height}
-      //     width={width}
-      //   />
-      // )
+      : 
+      type === "GDP" ? (
+      <path d={lineGenerator(lineChart)} stroke={"black"} strokeWidth={3} fill={"none"} />
+      )
+      :
+      type === "Population" ?(
+      <path d={lineGenerator(lineChart)} stroke={"black"} strokeWidth={3} fill={"none"} />
+      )
       :
       null}
       </g>
