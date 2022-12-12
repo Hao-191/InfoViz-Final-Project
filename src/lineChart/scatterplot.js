@@ -92,7 +92,7 @@ export function ScatterPlot(props) {
       ) 
       : 
       type === "GDP" ? (
-      <path d={lineGenerator(lineChart)} stroke={"black"} strokeWidth={3} fill={"none"} />
+      <path d={lineGenerator(lineChart)} stroke={"black"} opacity = {0.6} strokeWidth={3} fill={"none"} />
       )
       :
       type === "Population" ?(
