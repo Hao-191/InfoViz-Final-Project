@@ -166,7 +166,7 @@ function HeatMap() {
     <React.Fragment>
       <Box sx={{ margin: "20px", display: "flex", flexDirection: "column" }}>
         <Typography fontWeight="bold" fontSize={30} m={1}>
-          Relationship of Possible Factors and the Regional Volume
+          Relationship Between Possible Factors and the Regional Volume
           of Garbage Disposal in China
         </Typography>
         <Typography fontWeight="bold" m={1}>
